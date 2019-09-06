@@ -1,0 +1,3 @@
+1 --Sürekli bi senkürize butonu bulunsun mu yoksa 1 defa olup sonrasında her değişiklik yapıldığında otomatik mi yapsın yada ilk defasında senkütize olup sonraki değişikşilklerde sadece değişim komutunu mu çalıştırsa en kullanıcı dostu hangisi olur ??
+
+2 --kurulan bir odaya kişi sayısı koymak mantıklı mı ? 2 kişiyle sınırladım sınırı ortadan kaldırırsam bu defa yayın yapmaya başlayanlar olur amacı dışına çıkar ama amaç mutlu olmak olduğu için o da insanları mutlu edebilir.
