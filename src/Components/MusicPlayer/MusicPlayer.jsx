@@ -236,6 +236,8 @@ class MusicPlayer extends Component {
       console.log(this.props.yaratlanOdaAdi + " odaya katıdın");
 
        // 3 kavuşma sonrası beklenen an geldiğinde
+
+
       this.socket.on("3nolu bağlantı Sevdiğin Geldi", (i) => {
         console.log(i.kisisayisi)
         alert("Sevgilin geldi seni dinlemeye hazır.")
@@ -246,7 +248,7 @@ class MusicPlayer extends Component {
     } 
     
     // 2 odaya katıl seçeneğinden gelenler buraya düşecek
-    if (this.props.girilenOdaAdi) {
+    if (this.props.girilenOdaAdi && !this.props.kavusma) {
       this.socket.emit("1nolu bağlantı OdayaKatıl", { name: this.props.girilenOdaAdi } );
       console.log('bağlantı onayı bekleniyor'+this.props.girilenOdaAdi);
       this.socket.on('3nolu bağlantı Sevdiğin Geldi',()=>{
@@ -261,11 +263,8 @@ class MusicPlayer extends Component {
     // Yönlendiren komutları buradan sunucuya gönderecek
     if (this.props.yaratlanOdaAdi && this.props.kavusma){
       console.log("sevdiğiniz geldi artık siz yönlendiricisiniz.");
-      //ilk bağlanıldığında şarkı adını, zamanını  gönder
-      // 4 şarkı bilgilerini gönder
-      // sonrasında buton koyup ara ara tekrar senkronize etmek için fonksiyon olarak kaydettim
-      this.senkronizeEt();
-
+      //this.senkronizeEt();
+      
     };
     
     // 5 Yönlendirme komutları buraya düşer 
