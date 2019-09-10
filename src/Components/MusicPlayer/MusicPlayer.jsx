@@ -18,7 +18,7 @@ import LeakAddTwoToneIcon from '@material-ui/icons/LeakAddTwoTone';
 import Slider from "@material-ui/lab/Slider";
 import { TrackDetailsLink } from "../UI/TrackDetailsLink";
 import RoomLogin from "../RoomLogin/RoomLogin";
-import io from "socket.io-client";
+
 
 
 class MusicPlayer extends Component {
@@ -33,42 +33,23 @@ class MusicPlayer extends Component {
       volumeSliderValue: 50,
       positionStamp: "00:00",
       //durationStamp: '00:00',
-      player_init_error: false
+      player_init_error: false,
+      sureklisenkOnle:false
     };
 
     this.player = null;
     this.playerCheckInterval = null;
     this.positionCheckInterval = null;
-    this.socket = null;
+    
   }
 
   componentDidMount() {
     this.playerCheckInterval = setInterval(() => this.checkForPlayer(), 1000);
+   
   }
 
-  senkronizeEt = ()=>{
-    console.log("4 numarlı bağlantı gerçekleşti")
-    this.socket.emit("şarkıBilgileriniGönder",{
-      sarkiadi : this.state.playingInfo,
-      sarkiZamani : this.props.pozition_stamp
-    });
-  };
 
-  gelenSarkiyiCal = (sarkı,zaman)=>{
-    if((sarkı === this.state.playingInfo.track_window.current_track)  && 
-       ((this.props.pozition_stamp + 1000) <= zaman || (this.props.pozition_stamp-1000) <= zaman  )){
-         console.log("herşey yolunda herhangi bir düzeltmeye gerek yok")
-       }else{
-    this.props.playSong(
-      JSON.stringify({
-        context_uri: sarkı.album.uri,
-        offset: {
-          uri: sarkı.uri
-        }
-      })
-    );
-    this.onSeekSliderChange("1.yi boş bırakmaları bence çok ilginç bekki bi ara düzeltirim",zaman)
-  }};
+
 
   checkForPlayer = () => {
     const token = this.props.user.access_token;
@@ -84,8 +65,7 @@ class MusicPlayer extends Component {
     }
 
     if (this.player) {
-      this.createEventHandlers();
-      this.socket = io.connect("http://localhost:5000");
+      this.createEventHandlers();   
       this.player.connect();
     }
   };
@@ -161,7 +141,7 @@ class MusicPlayer extends Component {
         this.setState({ positionStamp, durationStamp });
         this.props.setPozitionStamp(state.position);
         this.props.setDurationStamps(state.duration);
-        console.log(state.duration);
+        //console.log(state.duration);
       }
     });
   };
@@ -204,6 +184,7 @@ class MusicPlayer extends Component {
     this.player.nextTrack();
   };
 
+
   onSeekSliderChange = (e, val) => {
     // duration = 100%
     // ? = val%
@@ -230,52 +211,7 @@ class MusicPlayer extends Component {
   };
 
   render() {
-    // 1 yeni oda yaratanlar buraya düşecek
-    if (this.props.yaratlanOdaAdi && !this.props.kavusma ) {
-      this.socket.emit("1nolu bağlantı OdayaKatıl", { name: this.props.yaratlanOdaAdi });
-      console.log(this.props.yaratlanOdaAdi + " odaya katıdın");
-
-       // 3 kavuşma sonrası beklenen an geldiğinde
-
-
-      this.socket.on("3nolu bağlantı Sevdiğin Geldi", (i) => {
-        console.log(i.kisisayisi)
-        alert("Sevgilin geldi seni dinlemeye hazır.")
-        this.props.setKavusma(true);
-        this.senkronizeEt();
-      
-      });
-    } 
-    
-    // 2 odaya katıl seçeneğinden gelenler buraya düşecek
-    if (this.props.girilenOdaAdi && !this.props.kavusma) {
-      this.socket.emit("1nolu bağlantı OdayaKatıl", { name: this.props.girilenOdaAdi } );
-      console.log('bağlantı onayı bekleniyor'+this.props.girilenOdaAdi);
-      this.socket.on('3nolu bağlantı Sevdiğin Geldi',()=>{
-        console.log("oda adı girildi ve 3 numaralı bağlantı gerçekleşti")
-        this.props.setKavusma(true); 
-      })
-           
-    };    
-    
-   
-    
-    // Yönlendiren komutları buradan sunucuya gönderecek
-    if (this.props.yaratlanOdaAdi && this.props.kavusma){
-      console.log("sevdiğiniz geldi artık siz yönlendiricisiniz.");
-      //this.senkronizeEt();
-      
-    };
-    
-    // 5 Yönlendirme komutları buraya düşer 
-    if (this.props.girilenOdaAdi && this.props.kavusma){
-      console.log("sevgiline bağlandın artık yönlendirinsin")
-      this.socket.on('gelenŞarkıBilgileriniÇal', (data) => {
-        console.log(data)
-        console.log(data.dataSarkı.sarkiZamani)
-        //this.gelenSarkiyiCal(data.dataSarkı.sarkiadi.track_window.current_track+data.dataSarkı.sarkiZamani)
-      })
-    };
+  
     
     let mainContent = (
       <Card
@@ -383,10 +319,6 @@ class MusicPlayer extends Component {
                   {this.state.playing ? <PauseIcon /> : <PlayArrowIcon />}
                 </IconButton>
 
-                <IconButton aria-label="Play/Pause" onClick={this.senkronizeEt}>
-                  {this.props.kavusma ? <LeakAddTwoToneIcon/> : <PlayArrowIcon />}
-                </IconButton>
-
                 <IconButton
                   disabled={
                     this.state.playingInfo.track_window.next_tracks.length === 0
@@ -440,7 +372,7 @@ class MusicPlayer extends Component {
     }
     return (
       <div>
-        <RoomLogin></RoomLogin>
+        <RoomLogin song={this.state.playingInfo} zamanagit={this.onSeekSliderChange} ></RoomLogin>
         <CssBaseline>{mainContent}</CssBaseline>
       </div>
     );
@@ -457,7 +389,7 @@ const mapStateToProps = state => {
     durationStamps: state.durationStamps,
     yaratlanOdaAdi: state.yaratlanOdaAdi,
     girilenOdaAdi: state.girilenOdaAdi,
-    kavusma: state.kavusma
+    
   };
 };
 
