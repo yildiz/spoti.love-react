@@ -24,6 +24,8 @@ import RoomLogin from "../RoomLogin/RoomLogin";
 class MusicPlayer extends Component {
   constructor(props) {
     super(props);
+    this.onSeekSliderChangeComing = this.onSeekSliderChangeComing.bind(this);
+    this.surebul = this.surebul.bind(this);
 
     this.state = {
       deviceId: null,
@@ -34,7 +36,9 @@ class MusicPlayer extends Component {
       positionStamp: "00:00",
       //durationStamp: '00:00',
       player_init_error: false,
-      sureklisenkOnle:false
+      sureklisenkOnle:false,
+      position:null
+
     };
 
     this.player = null;
@@ -139,12 +143,23 @@ class MusicPlayer extends Component {
         let durationStamp = this.milisToMinutesAndSeconds(state.duration);
 
         this.setState({ positionStamp, durationStamp });
-        this.props.setPozitionStamp(state.position);
-        this.props.setDurationStamps(state.duration);
+        //this.props.setPozitionStamp(state.position);
+        //this.props.setDurationStamps(state.duration);
         //console.log(state.duration);
       }
     });
   };
+
+  surebul = () =>{
+    this.player.getCurrentState()
+      .then(state => {
+       
+      console.log(state.position)
+      this.props.setPozitionStamp(state.position)
+      this.setState({position:state.position})
+      }) 
+      
+  }
 
   transferPlaybackHere = () => {
     // ONLY FOR PREMIUM USERS - transfer the playback automatically to the web app.
@@ -192,7 +207,15 @@ class MusicPlayer extends Component {
     let seek = Math.floor((val * dur) / 100); // round number
     this.setState({ positionSliderValue: val });
     console.log("valu değeri  " + val);
-    console.log("e değeri:  " + e);
+    //console.log("e değeri:  " + e);
+    this.player.seek(seek).then(() => {
+      console.log(`Seek song to ${seek} ms`);
+    });
+  };
+
+  onSeekSliderChangeComing = (seek) => {
+    let dur = (seek*100)/this.state.playingInfo.duration;
+    this.setState({ positionSliderValue: dur });
     this.player.seek(seek).then(() => {
       console.log(`Seek song to ${seek} ms`);
     });
@@ -372,7 +395,12 @@ class MusicPlayer extends Component {
     }
     return (
       <div>
-        <RoomLogin song={this.state.playingInfo} zamanagit={this.onSeekSliderChange} ></RoomLogin>
+        <RoomLogin 
+          song={this.state.playingInfo} 
+          zamanagit={this.onSeekSliderChangeComing} 
+          surebul={this.surebul}
+          //oAnlikSure={this.state.positionStamp}
+          />
         <CssBaseline>{mainContent}</CssBaseline>
       </div>
     );

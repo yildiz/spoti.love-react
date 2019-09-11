@@ -10,6 +10,7 @@ import { Grommet,TextInput,Heading,Paragraph,Box} from 'grommet';
 import { grommet } from "grommet/themes";
 import { deepMerge } from "grommet/utils";
 import io from "socket.io-client";
+import { reject } from 'q';
 
 
 const customTheme = deepMerge(grommet, {
@@ -91,16 +92,40 @@ class RoomLogin extends Component{
         this.props.setGirilenOdaAdi(this.state.segilidenGelenSevgiliKodu)
     };
 
-    gelenSarkiyiCal = (sarki)=>{
-        console.log("gelen şarkı bilgileri: ");
-        console.log(sarki)
-        console.log("sistemdeki şarkı bilgileri: ")
-        console.log(this.props.song )
+    verigönder =(sarkibilgi)=>{
+      return new Promise((resolve, reject)=>{
+        if(sarkibilgi){
+          resolve(sarkibilgi)
+        }else{
+          reject("önce spotify a girip spoli.love dan gieleme seçeneğini seçin")
+        }
+      })
+    }
+    
+    gelenSarkiBilgileriniCal = (data) =>{
+      return new Promise((resolve,reject)=>{
+        //Aynı şarkı ve yakın zamanlardaysa  
+        if ((data.dataSarkı.sarkiadi.track_window.current_track.id === this.props.song.track_window.current_track.id)&& !((this.props.song.position+1000>= data.dataSarkı.sarkiadi.position) || (this.props.song.position-1000<= data.dataSarkı.sarkiadi.position))
+           ){
+            reject("herşey tamam")
+          }else{//ikisinden biri farklıysa ayarlama başlasın
+            resolve(data)
+          }
+
+      })
+    }
+    
+/*
+    gelenSarkiyiCal = (sarki,zaman)=>{
+        console.log("gelen şarkı süresi: ");
+        console.log(zaman);
+        console.log("sistemdeki şarkı süresi: ");
+        console.log(this.props.song );
         
-        
-        if(sarki === this.props.song.track_window.current_track){
-             console.log("herşey yolunda herhangi bir düzeltmeye gerek yok")
-           }else{
+        //çalan şarkı ile gelen şarkının aynı olup olmadığını kontrol et
+        if(sarki.id === this.props.song.track_window.current_track.id){
+             console.log("Şarkı aynı değiştirmeye gerek yok ")
+           }else{//farklı ise gelen şarkıyı çal
         this.props.playSong(
           JSON.stringify({
             context_uri: sarki.album.uri,
@@ -109,17 +134,35 @@ class RoomLogin extends Component{
             }
           })
         );
-       ()=>this.props.zamanagit(sarki.duration)
-        //this.onSeekSliderChange("1.yi boş bırakmaları bence çok ilginç bekki bi ara düzeltirim",zaman)
-      }
+        //şarkı süresi ile gelen şarkı süresi karşılaştır aynı ise bişey yapma farklı ise değiştir
+        if( !((this.props.song.position+1000>= zaman) || (this.props.song.position-1000<= zaman))){          
+          this.props.zamanagit(zaman)
+        }
+     }
     
     };
-
+*/
     senkronizeEt = ()=>{    
         console.log("4 numarlı bağlantı gerçekleşti")
-        this.socket.emit("şarkıBilgileriniGönder",{
-          sarkiadi : this.props.song
-        });
+        this.verigönder(this.props.song)
+          .then((data)=>{
+            this.props.surebul()
+          })
+          .then((data)=>{
+            let sarkisuresi = this.props.pozition_stamp;
+            console.log(sarkisuresi)
+            const gonderilecekDosya=[ data,sarkisuresi]
+            return gonderilecekDosya
+          }).then((gonderilecekDosya)=>{
+
+            this.socket.emit("şarkıBilgileriniGönder",{
+              sarkiadi : gonderilecekDosya[0],
+              sarkizamani : gonderilecekDosya[1]
+            });
+          })
+        
+        
+
       };
     
 
@@ -151,10 +194,40 @@ class RoomLogin extends Component{
       // 5 Yönlendirme komutları buraya düşer 
       if (this.props.girilenOdaAdi && this.props.kavusma){
         this.socket.on('gelenŞarkıBilgileriniÇal', (data) => {
-          console.log("veri geldi hadi bakalım")
           console.log(data)
-          this.gelenSarkiyiCal(data.dataSarkı.sarkiadi.track_window.current_track)
-        })
+          this.gelenSarkiBilgileriniCal(data)
+            .then((data)=>{
+              if( data.dataSarkı.sarkiadi.track_window.current_track.id === this.props.song.track_window.current_track.id){
+                console.log("şarkı aynı ayrı birdüzeltmeye gerek yok")
+                return data
+              }else{
+                console.log("şarkı farklı değiştiriliyor")
+                this.props.playSong(
+                  JSON.stringify({
+                    context_uri: data.dataSarkı.sarkiadi.track_window.current_track.album.uri,
+                    offset: {
+                      uri: data.dataSarkı.sarkiadi.track_window.current_track.uri
+                    }
+                  })
+                ); 
+                return data
+              };
+            })
+          .then((data)=>{
+            if( !((this.props.song.position+1000>= data.dataSarkı.sarkiadi.position) || (this.props.song.position-1000<= data.dataSarkı.sarkiadi.position)))
+              {
+                console.log("şarkı zamanı ayarlanıyor")
+              }else 
+              this.props.zamanagit(data.sarkizamani)
+              console.log("şarkı zamanı aynı")
+            return data            
+            })
+          .catch((herseyTamOlmasıGrektigiGibi)=>{
+            console.log(herseyTamOlmasıGrektigiGibi);
+          });
+        });
+
+          //this.gelenSarkiyiCal(data.dataSarkı.sarkiadi.track_window.current_track,data.dataSarkı.sarkiadi.position)
       };
 
 
@@ -255,6 +328,7 @@ const mapStateToProps = state => {
     return{
     yaratlanOdaAdi: state.yaratlanOdaAdi,
     girilenOdaAdi: state.girilenOdaAdi,
+    pozition_stamp: state.pozition_stamp,
     kavusma: state.kavusma,
     }
 }
@@ -266,8 +340,7 @@ const mapDispatchToProps = dispatch =>{
             dispatch({type: actionTypes.GIRILEN_ODA_ADI,girilenOdaAdi}),
         setIsPlaying: isPlaying =>
             dispatch({ type: actionTypes.SET_IS_PLAYING, isPlaying }),
-        setDurationStamps: durationStamps =>
-            dispatch({ type: actionTypes.DURATION_STAMP, durationStamps }),
+        
         setKavusma: kavusma => dispatch({ type: actionTypes.KAVUSMA, kavusma }),
         playSong: uris => dispatch(actionTypes.playSong(uris)),
         };
