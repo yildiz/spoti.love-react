@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../store/actions/actionTypes';
-import { createMuiTheme,  makeStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import { green} from '@material-ui/core/colors';
-import { ThemeProvider } from 'styled-components'
-import TextField from '@material-ui/core/TextField';
 import { Grommet,TextInput,Heading,Paragraph,Box} from 'grommet';
 import { grommet } from "grommet/themes";
 import { deepMerge } from "grommet/utils";
 import io from "socket.io-client";
+/*  Bir ara kullandım belli olmaz belki sonra yine kullanırım
+import { green} from '@material-ui/core/colors';
+import { ThemeProvider } from 'styled-components'
+import TextField from '@material-ui/core/TextField';
+import { createMuiTheme,  makeStyles, withStyles } from '@material-ui/core/styles';
 import { reject } from 'q';
-
+*/
 
 const customTheme = deepMerge(grommet, {
     textInput: {
@@ -73,7 +74,19 @@ class RoomLogin extends Component{
         this.socket = io.connect("http://localhost:5000/");  
     }
     
-    
+    //gelen propslara göre kendini yeniden şekillendirmesi gerekmesin
+    /*
+    shouldComponentUpdate(nextProps, nextState) {
+      console.log(nextProps)
+      console.log(nextState)
+      if(nextProps.value === ){
+        return false
+      }
+      else{
+      return true;
+      }
+    }
+    */
     odaOlusturucuMenusunuAc = ()=> this.setState({odaOlustur: true});
     odayaGirisYapmaMenusunuAc = () => this.setState({odayaGisisYap: true});
     girisYapilacakOdaAdifc = (event)=> this.setState({girisYapilacakOdaAdi:event.target.value});
@@ -104,13 +117,13 @@ class RoomLogin extends Component{
     
     gelenSarkiBilgileriniCal = (data) =>{
       return new Promise((resolve,reject)=>{
-        //Aynı şarkı ve yakın zamanlardaysa  
-        if ((data.dataSarkı.sarkiadi.track_window.current_track.id === this.props.song.track_window.current_track.id)&& !((this.props.song.position+1000>= data.dataSarkı.sarkiadi.position) || (this.props.song.position-1000<= data.dataSarkı.sarkiadi.position))
-           ){
-            reject("herşey tamam")
-          }else{//ikisinden biri farklıysa ayarlama başlasın
-            resolve(data)
-          }
+        //Ayarlama yap
+        if ( data){
+          resolve(data)
+        }else{//ikisinden biri farklıysa ayarlama başlasın
+          reject("herşey tamam")
+          //data yokmuş ilginç
+        }
 
       })
     }
@@ -143,27 +156,29 @@ class RoomLogin extends Component{
     };
 */
     senkronizeEt = ()=>{    
+      this.props.surebul();
+      this.verigönder(this.props.song)
+      .then((data)=>{
+        console.log('süre bulma çalıştı ve gelen data:');
+        console.log(data);
+        return data;
+      })
+      .then((data)=>{
+        let sarkisuresi = this.props.value;
+        console.log('gönderilecek'+sarkisuresi);
+        const gonderilecekDosya=[ data,sarkisuresi]
+        return gonderilecekDosya
+      }).then((gonderilecekDosya)=>{
+        
+        this.socket.emit("şarkıBilgileriniGönder",{
+          sarkiadi : gonderilecekDosya[0],
+          sarkizamani : gonderilecekDosya[1]
+        });
         console.log("4 numarlı bağlantı gerçekleşti")
-        this.verigönder(this.props.song)
-          .then((data)=>{
-            this.props.surebul()
-          })
-          .then((data)=>{
-            let sarkisuresi = this.props.pozition_stamp;
-            console.log(sarkisuresi)
-            const gonderilecekDosya=[ data,sarkisuresi]
-            return gonderilecekDosya
-          }).then((gonderilecekDosya)=>{
-
-            this.socket.emit("şarkıBilgileriniGönder",{
-              sarkiadi : gonderilecekDosya[0],
-              sarkizamani : gonderilecekDosya[1]
-            });
-          })
-        
-        
-
-      };
+      }).catch(()=>{
+        console.log("veriler bi şekilde gitmedi bi araştır onu ")
+      })
+    };
     
 
     render(){
@@ -194,38 +209,62 @@ class RoomLogin extends Component{
       // 5 Yönlendirme komutları buraya düşer 
       if (this.props.girilenOdaAdi && this.props.kavusma){
         this.socket.on('gelenŞarkıBilgileriniÇal', (data) => {
+          //this.props.surebul(),
+          this.props.sarkiyiVeSuresiniAyarla(data.dataSarkı.sarkiadi.track_window.current_track.uri,data.dataSarkı.sarkiadi.track_window.current_track.album.uri,data.dataSarkı.sarkizamani),
+          
+          console.log('gelen şarkı bilgileri')
           console.log(data)
+          setTimeout(()=>{
           this.gelenSarkiBilgileriniCal(data)
             .then((data)=>{
-              if( data.dataSarkı.sarkiadi.track_window.current_track.id === this.props.song.track_window.current_track.id){
-                console.log("şarkı aynı ayrı birdüzeltmeye gerek yok")
-                return data
-              }else{
-                console.log("şarkı farklı değiştiriliyor")
+              console.log('data dan gelen şarkı bilgileri')
+              console.log(data.dataSarkı.sarkiadi.track_window.current_track.id)
+              console.log('Sistemdeki şarkı bilgileri')
+              console.log(this.props.song.track_window.current_track.id)
+              setTimeout(()=>{
+              console.log("şarkı farklı değiştiriliyor")
                 this.props.playSong(
                   JSON.stringify({
                     context_uri: data.dataSarkı.sarkiadi.track_window.current_track.album.uri,
                     offset: {
                       uri: data.dataSarkı.sarkiadi.track_window.current_track.uri
-                    }
+                    },
                   })
-                ); 
+                );
+                return data 
+              },3000)
+              
+              if(data.dataSarkı.sarkiadi.track_window.current_track.id === this.props.song.track_window.current_track.id ){
+                console.log("şarkı aynı ayrı bir düzeltmeye gerek yok")
+                return data
+              }else{
+                console.log("şarkı farklı değiştiriliyor")
+                this.props.playSong(
+                  JSON.stringify({
+                    //context_uri: data.dataSarkı.sarkiadi.context.uri,
+                    offset: {
+                      uri: data.dataSarkı.sarkiadi.track_window.current_track.uri,
+                    },
+                  })
+                );                
                 return data
               };
+              
             })
-          .then((data)=>{
-            if( !((this.props.song.position+1000>= data.dataSarkı.sarkiadi.position) || (this.props.song.position-1000<= data.dataSarkı.sarkiadi.position)))
-              {
-                console.log("şarkı zamanı ayarlanıyor")
-              }else 
-              this.props.zamanagit(data.sarkizamani)
-              console.log("şarkı zamanı aynı")
-            return data            
+            .then((data)=>{
+              console.log("şarkı süresi ayarlanıyor");
+              console.log(data)
+              this.props.onChange("ne istersen onu yaz",data.dataSarkı.sarkizamani)
+
             })
-          .catch((herseyTamOlmasıGrektigiGibi)=>{
-            console.log(herseyTamOlmasıGrektigiGibi);
+            .catch(()=>{
+            console.log('herseyTamOlmasıGrektigiGibi');
           });
-        });
+        },3000)
+        
+
+        }
+        )
 
           //this.gelenSarkiyiCal(data.dataSarkı.sarkiadi.track_window.current_track,data.dataSarkı.sarkiadi.position)
       };

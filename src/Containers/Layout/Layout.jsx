@@ -68,11 +68,20 @@ class Layout extends Component {
           })
           .catch(err => console.log(err));
       } else {
-        window.location = `https://accounts.spotify.com/authorize?client_id=${
+        
+        var scopes = 'user-read-private user-read-email streaming user-modify-playback-state';
+       window.location = `https://accounts.spotify.com/authorize?client_id=${
           '7fd0742a8641475a91a761f988b1522c'
         }&redirect_uri=${'http://localhost:3000/callback'}&scope=${
-          'streaming'
+          encodeURIComponent(scopes)
         }&response_type=token`;
+        /*
+       var scopes = 'user-read-private user-read-email streaming user-modify-playback-state';
+        window.location ='https://accounts.spotify.com/authorize' +
+        '?response_type=code' +
+        '&client_id=' + '7fd0742a8641475a91a761f988b1522c' +
+        (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
+        '&redirect_uri=' + encodeURIComponent('http://localhost:3000/callback')+'&response_type=token'*/
       }
     }
   }
