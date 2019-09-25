@@ -210,59 +210,7 @@ class RoomLogin extends Component{
       if (this.props.girilenOdaAdi && this.props.kavusma){
         this.socket.on('gelenŞarkıBilgileriniÇal', (data) => {
           //this.props.surebul(),
-          this.props.sarkiyiVeSuresiniAyarla(data.dataSarkı.sarkiadi.track_window.current_track.uri,data.dataSarkı.sarkiadi.track_window.current_track.album.uri,data.dataSarkı.sarkizamani),
-          
-          console.log('gelen şarkı bilgileri')
-          console.log(data)
-          setTimeout(()=>{
-          this.gelenSarkiBilgileriniCal(data)
-            .then((data)=>{
-              console.log('data dan gelen şarkı bilgileri')
-              console.log(data.dataSarkı.sarkiadi.track_window.current_track.id)
-              console.log('Sistemdeki şarkı bilgileri')
-              console.log(this.props.song.track_window.current_track.id)
-              setTimeout(()=>{
-              console.log("şarkı farklı değiştiriliyor")
-                this.props.playSong(
-                  JSON.stringify({
-                    context_uri: data.dataSarkı.sarkiadi.track_window.current_track.album.uri,
-                    offset: {
-                      uri: data.dataSarkı.sarkiadi.track_window.current_track.uri
-                    },
-                  })
-                );
-                return data 
-              },3000)
-              
-              if(data.dataSarkı.sarkiadi.track_window.current_track.id === this.props.song.track_window.current_track.id ){
-                console.log("şarkı aynı ayrı bir düzeltmeye gerek yok")
-                return data
-              }else{
-                console.log("şarkı farklı değiştiriliyor")
-                this.props.playSong(
-                  JSON.stringify({
-                    //context_uri: data.dataSarkı.sarkiadi.context.uri,
-                    offset: {
-                      uri: data.dataSarkı.sarkiadi.track_window.current_track.uri,
-                    },
-                  })
-                );                
-                return data
-              };
-              
-            })
-            .then((data)=>{
-              console.log("şarkı süresi ayarlanıyor");
-              console.log(data)
-              this.props.onChange("ne istersen onu yaz",data.dataSarkı.sarkizamani)
-
-            })
-            .catch(()=>{
-            console.log('herseyTamOlmasıGrektigiGibi');
-          });
-        },3000)
-        
-
+          this.props.sarkiyiVeSuresiniAyarla(data.dataSarkı.sarkiadi.track_window.current_track.uri,data.dataSarkı.sarkiadi.track_window.current_track.album.uri,data.dataSarkı.sarkizamani)
         }
         )
 

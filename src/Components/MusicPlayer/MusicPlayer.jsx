@@ -14,7 +14,6 @@ import SkipNextIcon from "@material-ui/icons/SkipNext";
 import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
 import PauseIcon from "@material-ui/icons/Pause";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import LeakAddTwoToneIcon from '@material-ui/icons/LeakAddTwoTone';
 import Slider from "@material-ui/lab/Slider";
 import { TrackDetailsLink } from "../UI/TrackDetailsLink";
 import RoomLogin from "../RoomLogin/RoomLogin";
@@ -55,7 +54,7 @@ class MusicPlayer extends Component {
 
 
   sarkiyiVeSuresiniAyarla=(uri,context_uri,suresi)=> {
-    setTimeout(()=>{
+    if(uri !== this.state.playingInfo.track_window.current_track.uri){
       console.log("şarkı değiştiriliyor")
         this.props.playSong(
           JSON.stringify({
@@ -65,10 +64,11 @@ class MusicPlayer extends Component {
             },
           })
         ); 
-      },1000);
-    
+    }else if(suresi !== this.state.positionSliderValue )
     setTimeout(this.onSeekSliderChange("asd",suresi),5000)
-
+    else {
+    console.log("konsold abu yazıyı gördüysen rahat uyu")
+    }
   }
 
   checkForPlayer = () => {
@@ -403,7 +403,7 @@ class MusicPlayer extends Component {
         <RoomLogin 
           value={this.state.sarkiSuresi}
           song={this.state.sarkiAdi} 
-          onChange={this.onSeekSliderChange}
+          //onChange={this.onSeekSliderChange}
           surebul={this.surebul}
           sarkiyiVeSuresiniAyarla={this.sarkiyiVeSuresiniAyarla}
         />
