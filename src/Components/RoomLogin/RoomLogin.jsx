@@ -71,7 +71,7 @@ class RoomLogin extends Component{
     }
 
     componentDidMount() {
-        this.socket = io.connect("http://localhost:5000/");  
+        this.socket = io.connect("https://spotifyreactreduxapp.herokuapp.com/");  
     }
     
     //gelen propslara göre kendini yeniden şekillendirmesi gerekmesin
@@ -157,6 +157,7 @@ class RoomLogin extends Component{
 */
     senkronizeEt = ()=>{    
       this.props.surebul();
+      setTimeout(
       this.verigönder(this.props.song)
       .then((data)=>{
         console.log('süre bulma çalıştı ve gelen data:');
@@ -177,7 +178,7 @@ class RoomLogin extends Component{
         console.log("4 numarlı bağlantı gerçekleşti")
       }).catch(()=>{
         console.log("veriler bi şekilde gitmedi bi araştır onu ")
-      })
+      }),3000)
     };
     
 
