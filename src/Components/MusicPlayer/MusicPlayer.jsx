@@ -53,21 +53,42 @@ class MusicPlayer extends Component {
   }
 
 
-  sarkiyiVeSuresiniAyarla=(uri,context_uri,suresi)=> {
+  sarkiyiVeSuresiniAyarla = async(uri,context_uri,suresi)=>{
+    if((uri !== this.state.playingInfo.track_window.current_track.uri)&&(suresi !== this.state.positionSliderValue)){
+      //şarkı ve şarkı süresi aynı değil
+      await this.props.playSong(
+        JSON.stringify({
+          context_uri: context_uri,
+          offset: {
+            uri: uri
+          },
+        })
+    );
+      setTimeout(()=>{
+        this.onSeekSliderChange("asd",suresi)
+     },2000) 
+
+    } 
+    /*
     if(uri !== this.state.playingInfo.track_window.current_track.uri){
+    //şarkı 
       console.log("şarkı değiştiriliyor")
-        this.props.playSong(
+       this.props.playSong(
           JSON.stringify({
             context_uri: context_uri,
             offset: {
               uri: uri
             },
           })
-        ); 
-    }else if(suresi !== this.state.positionSliderValue )
-    setTimeout(this.onSeekSliderChange("asd",suresi),5000)
+      );
+            
+    }else*/ 
+    if((uri === this.state.playingInfo.track_window.current_track.uri)  &&(suresi !== this.state.positionSliderValue) )
+    //şarkı aynı süresi farklı 
+    this.onSeekSliderChange("asd",suresi)
     else {
-    console.log("konsold abu yazıyı gördüysen rahat uyu")
+    //herşeyiyle güzel maşallah
+    console.log("konsolda bu yazıyı gördüysen maşallah demek için ekrana tükürebilirsin")
     }
   }
 

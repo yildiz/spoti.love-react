@@ -71,7 +71,7 @@ class RoomLogin extends Component{
     }
 
     componentDidMount() {
-        this.socket = io.connect("https://spotifyreactreduxapp.herokuapp.com/");  
+        this.socket = io.connect("http://localhost:5000");  
     }
     
     //gelen propslara göre kendini yeniden şekillendirmesi gerekmesin
@@ -155,15 +155,10 @@ class RoomLogin extends Component{
     
     };
 */
-    senkronizeEt = ()=>{    
-      this.props.surebul();
+    senkronizeEt = async()=>{    
+      await this.props.surebul();
       setTimeout(
       this.verigönder(this.props.song)
-      .then((data)=>{
-        console.log('süre bulma çalıştı ve gelen data:');
-        console.log(data);
-        return data;
-      })
       .then((data)=>{
         let sarkisuresi = this.props.value;
         console.log('gönderilecek'+sarkisuresi);
