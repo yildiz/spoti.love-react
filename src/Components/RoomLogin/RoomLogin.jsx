@@ -69,8 +69,7 @@ class RoomLogin extends Component {
   }
   //Mesajlaşma için Gerekli Fonksiyonlar
   yazdiginMesajıGönder = () => {
-    //doldurulup buttona atanacak
-    this.socket.emit("mesajıgönder", {
+    this.socket.emit("mesaj Geldi", {
       name: this.state.yazdigimMesaj
     });
   };
@@ -116,13 +115,10 @@ class RoomLogin extends Component {
 
   gelenSarkiBilgileriniCal = data => {
     return new Promise((resolve, reject) => {
-      //Ayarlama yap
       if (data) {
         resolve(data);
       } else {
-        //ikisinden biri farklıysa ayarlama başlasın
         reject("herşey tamam");
-        //data yokmuş ilginç
       }
     });
   };
@@ -181,15 +177,21 @@ class RoomLogin extends Component {
     // 5 Yönlendirme komutları buraya düşer
     if (this.props.girilenOdaAdi && this.props.kavusma) {
       this.socket.on("gelenŞarkıBilgileriniÇal", data => {
-        //this.props.surebul(),
         this.props.sarkiyiVeSuresiniAyarla(
           data.dataSarkı.sarkiadi.track_window.current_track.uri,
           data.dataSarkı.sarkiadi.track_window.current_track.album.uri,
           data.dataSarkı.sarkizamani
         );
       });
+      this.socket.on("gelen Mesaj", mesaj => {
+        this.setState({ gelenMesaj: mesaj });
+      });
+    }
 
-      //this.gelenSarkiyiCal(data.dataSarkı.sarkiadi.track_window.current_track,data.dataSarkı.sarkiadi.position)
+    if (this.props.yaratlanOdaAdi && this.props.kavusma) {
+      this.socket.on("gelen Mesaj", mesaj => {
+        this.setState({ gelenMesaj: mesaj });
+      });
     }
 
     let girisKontrol = (
@@ -307,18 +309,44 @@ class RoomLogin extends Component {
           >
             Senkronize et
           </Button>
+          <br />
+          {this.state.gelenMesaj}
+          <br />
           <TextArea
-            placeholder="type here"
+            placeholder="Mesaj Yaz"
             value={this.state.yazdigimMesaj}
             onChange={event =>
               this.setState({ yazdigimMesaj: event.target.value })
             }
           />
+          <br />
           <Button
             icon={<Send />}
             label="Gönder"
             onClick={this.yazdiginMesajıGönder}
           />
+        </div>
+      );
+    }
+    if (this.props.girilenOdaAdi && this.props.yaratlanOdaAdi) {
+      girisKontrol = (
+        <div>
+          {this.state.gelenMesaj}
+          <br />
+          <TextArea
+            placeholder="Mesaj Yaz"
+            value={this.state.yazdigimMesaj}
+            onChange={event =>
+              this.setState({ yazdigimMesaj: event.target.value })
+            }
+          />
+          <br />
+          <Button
+            icon={<Send />}
+            label="Gönder"
+            onClick={this.yazdiginMesajıGönder}
+          />
+          <br />
         </div>
       );
     }
