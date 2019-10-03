@@ -56,7 +56,7 @@ class MusicPlayer extends Component {
   sarkiyiVeSuresiniAyarla = async(uri,context_uri,suresi)=>{
     if((uri !== this.state.playingInfo.track_window.current_track.uri)&&(suresi !== this.state.positionSliderValue)){
       //şarkı ve şarkı süresi aynı değil
-      await this.props.playSong(
+    this.props.playSong(
         JSON.stringify({
           context_uri: context_uri,
           offset: {
@@ -65,8 +65,8 @@ class MusicPlayer extends Component {
         })
     );
       setTimeout(()=>{
-        this.onSeekSliderChange("asd",suresi)
-     },2000) 
+      this.onSeekSliderChange("asd",suresi)
+      },2000) 
 
     } 
     /*

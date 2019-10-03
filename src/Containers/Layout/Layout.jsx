@@ -1,28 +1,27 @@
-import React, { Component } from 'react';
-import { Switch, Route, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { SpotifyApiContext } from 'react-spotify-api';
-import axios from 'axios';
-import * as actionTypes from '../../store/actions/actionTypes';
-import MusicPlayer from '../../Components/MusicPlayer/MusicPlayer';
-import Login from '../../Components/Login/Login';
-import { withWidth } from '@material-ui/core';
-import Girisekrani from '../../Components/GirisEkranı';
+import React, { Component } from "react";
+import { Switch, Route, withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import { SpotifyApiContext } from "react-spotify-api";
+import axios from "axios";
+import * as actionTypes from "../../store/actions/actionTypes";
+import MusicPlayer from "../../Components/MusicPlayer/MusicPlayer";
+import Login from "../../Components/Login/Login";
+import { withWidth } from "@material-ui/core";
+import Girisekrani from "../../Components/GirisEkranı";
 
 class Layout extends Component {
-
-    constructor(props) {
-        super(props);
-        this.handleLoginClick = this.handleLoginClick.bind(this);
-        this.state = {
-            isLoggedIn: false,
-            sideDrawerOpen: false,
-            isOnMobile: false
-        };
-        }; 
-        handleLoginClick() {
-            this.setState({isLoggedIn: true});
-          };
+  constructor(props) {
+    super(props);
+    this.handleLoginClick = this.handleLoginClick.bind(this);
+    this.state = {
+      isLoggedIn: false,
+      sideDrawerOpen: false,
+      isOnMobile: false
+    };
+  }
+  handleLoginClick() {
+    this.setState({ isLoggedIn: true });
+  }
 
   isOnMobile = () => {
     var check = false;
@@ -47,9 +46,9 @@ class Layout extends Component {
     let params = this.getHashParams();
     console.log(params);
     if (!this.props.user) {
-      if ('access_token' in params) {
+      if ("access_token" in params) {
         axios
-          .get('https://api.spotify.com/v1/me', {
+          .get("https://api.spotify.com/v1/me", {
             headers: {
               Authorization: `Bearer ${params.access_token}`
             }
@@ -68,13 +67,11 @@ class Layout extends Component {
           })
           .catch(err => console.log(err));
       } else {
-        
-        var scopes = 'user-read-private user-read-email streaming user-modify-playback-state';
-       window.location = `https://accounts.spotify.com/authorize?client_id=${
-          '7fd0742a8641475a91a761f988b1522c'
-        }&redirect_uri=${'http://localhost:3000/callback'}&scope=${
-          encodeURIComponent(scopes)
-        }&response_type=token`;
+        var scopes =
+          "user-read-private user-read-email streaming user-modify-playback-state";
+        window.location = `https://accounts.spotify.com/authorize?client_id=${"dcffa764dc1542f0bd6296e4abe052b9"}&redirect_uri=${"https://spotilove.herokuapp.com"}&scope=${encodeURIComponent(
+          scopes
+        )}&response_type=token`;
         /*
        var scopes = 'user-read-private user-read-email streaming user-modify-playback-state';
         window.location ='https://accounts.spotify.com/authorize' +
@@ -88,8 +85,8 @@ class Layout extends Component {
 
   logInUserAndGetInfo = newUser => {
     this.props.setUser(newUser); // set user in redux state
-    if (this.props.location.pathname === '/') {
-      this.props.history.push('/browse/featured'); // if there is no page the user wants to go to
+    if (this.props.location.pathname === "/") {
+      this.props.history.push("/browse/featured"); // if there is no page the user wants to go to
       // then go to the home page
     } else {
       // if there is a page the user wants to go to then just send them there
@@ -107,7 +104,7 @@ class Layout extends Component {
     }
     return hashParams;
   }
-/*
+  /*
   toggleDrawerHandler = () => {
     let mode = this.state.sideDrawerOpen;
     this.setState({ sideDrawerOpen: !mode });
@@ -127,25 +124,30 @@ class Layout extends Component {
       );
     */
 
-
-    let girisyapici = (<Switch>
-                        <Route component={Login} />
-                     </Switch>);
-    
-    return (
-        <div>
-            {this.props.user ? (
-            <React.Fragment>      
-                <SpotifyApiContext.Provider value={this.props.user.access_token}>
-                    <MusicPlayer />           
-                </SpotifyApiContext.Provider>
-            </React.Fragment>
-            ) :( (isLoggedIn || this.props.user)? girisyapici: <Girisekrani onClick={this.handleLoginClick} /> )
-            };
-        </div>
+    let girisyapici = (
+      <Switch>
+        <Route component={Login} />
+      </Switch>
     );
-  };
-};
+
+    return (
+      <div>
+        {this.props.user ? (
+          <React.Fragment>
+            <SpotifyApiContext.Provider value={this.props.user.access_token}>
+              <MusicPlayer />
+            </SpotifyApiContext.Provider>
+          </React.Fragment>
+        ) : isLoggedIn || this.props.user ? (
+          girisyapici
+        ) : (
+          <Girisekrani onClick={this.handleLoginClick} />
+        )}
+        ;
+      </div>
+    );
+  }
+}
 
 const mapStateToProps = state => {
   return {
