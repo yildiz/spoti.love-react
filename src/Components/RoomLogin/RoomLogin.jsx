@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import * as actionTypes from "../../store/actions/actionTypes";
 import Button from "@material-ui/core/Button";
 import { Send } from "grommet-icons";
-import { Grommet, TextInput, Heading, Paragraph, Box } from "grommet";
+import { Grommet, TextInput, Heading, Paragraph, Box, TextArea } from "grommet";
 import { grommet } from "grommet/themes";
 import { deepMerge } from "grommet/utils";
 import io from "socket.io-client";
@@ -309,11 +309,13 @@ class RoomLogin extends Component {
           </Button>
           <TextArea
             placeholder="type here"
-            value={value}
-            onChange={event => setValue(event.target.value)}
+            value={this.state.yazdigimMesaj}
+            onChange={event =>
+              this.setState({ yazdigimMesaj: event.target.value })
+            }
           />
           <Button
-            icon={<Icons.Send />}
+            icon={<Send />}
             label="Gönder"
             onClick={this.yazdiginMesajıGönder}
           />
