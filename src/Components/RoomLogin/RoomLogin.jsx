@@ -68,11 +68,11 @@ class RoomLogin extends Component {
     this.socket = io.connect("https://spotilovebackend.herokuapp.com/");
   }
   //Mesajlaşma için Gerekli Fonksiyonlar
-  yazdigimMesajAlanindaDegisiklikYap = event => {
-    this.setState({ yazdigimMesaj: event.target.value });
-  };
   yazdiginMesajıGönder = () => {
     //doldurulup buttona atanacak
+    this.socket.emit("mesajıgönder", {
+      name: this.state.yazdigimMesaj
+    });
   };
   mesajGeldi = geldi => {
     this.setState({ gelenMesaj: geldi });
