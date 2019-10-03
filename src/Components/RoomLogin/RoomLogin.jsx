@@ -7,7 +7,7 @@ import { Grommet, TextInput, Heading, Paragraph, Box, TextArea } from "grommet";
 import { grommet } from "grommet/themes";
 import { deepMerge } from "grommet/utils";
 import io from "socket.io-client";
-import SpotiLove from "./spotilove.svg";
+import Spotilove from "./spotilove.svg";
 const customTheme = deepMerge(grommet, {
   textInput: {
     extend: () => `
@@ -197,9 +197,9 @@ class RoomLogin extends Component {
 
     let girisKontrol = (
       <div>
-        <SpotiLove />
         <Box align="center" pad="large">
           <Box direction="row" align="center" gap="small" pad="xsmall">
+            <Spotilove />
             <Button
               variant="contained"
               color="primary"
