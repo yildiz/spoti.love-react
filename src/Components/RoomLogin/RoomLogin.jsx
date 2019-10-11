@@ -81,6 +81,7 @@ class RoomLogin extends Component {
     });
   };
   mesajGeldi = geldi => {
+    console.log(geldi);
     this.setState({ gelenMesaj: geldi });
   };
 
@@ -180,8 +181,9 @@ class RoomLogin extends Component {
       });
     }
     // 5 Yönlendirme komutları buraya düşer
-    if (this.props.girilenOdaAdi && this.props.kavusma) {
+    if (this.props.girilenOdaAdi) {
       this.socket.on("gelenŞarkıBilgileriniÇal", data => {
+        console.log(data);
         this.props.sarkiyiVeSuresiniAyarla(
           data.dataSarkı.sarkiadi.track_window.current_track.uri,
           data.dataSarkı.sarkiadi.track_window.current_track.album.uri,
@@ -189,12 +191,13 @@ class RoomLogin extends Component {
         );
       });
       this.socket.on("gelen Mesaj", mesaj => {
-        this.setState({ gelenMesaj: mesaj });
+        this.state.mesajGeldi(mesaj);
       });
     }
 
-    if (this.props.yaratlanOdaAdi && this.props.kavusma) {
+    if (this.props.yaratlanOdaAdi) {
       this.socket.on("gelen Mesaj", mesaj => {
+        console.log(mesaj);
         this.setState({ gelenMesaj: mesaj });
       });
     }
