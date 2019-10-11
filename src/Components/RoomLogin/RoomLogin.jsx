@@ -1,9 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actionTypes from "../../store/actions/actionTypes";
-import Button from "@material-ui/core/Button";
-import { Send } from "grommet-icons";
-import { Grommet, TextInput, Heading, Paragraph, Box, TextArea } from "grommet";
+import { Send, Sync, Login, Run } from "grommet-icons";
+import {
+  Grommet,
+  TextInput,
+  Heading,
+  Paragraph,
+  Box,
+  TextArea,
+  Button
+} from "grommet";
 import { grommet } from "grommet/themes";
 import { deepMerge } from "grommet/utils";
 import io from "socket.io-client";
@@ -83,12 +90,10 @@ class RoomLogin extends Component {
   girisYapilacakOdaAdifc = event =>
     this.setState({ girisYapilacakOdaAdi: event.target.value });
   odayaGirisYapmaUygulamasınıCalıstır = () => {
-    alert("girilecek oda adı " + this.state.girisYapilacakOdaAdi);
     this.props.setYaretılanOdaAdı(this.state.girisYapilacakOdaAdi);
     this.setState({ odayaSevgilinBekleniyor: true });
   };
   odayaSevgiliGirmedenCikma = () => {
-    alert(" belki gelirdi biraz ecele ettin sanki  ");
     this.setState({ odaOlustur: false });
     this.setState({ odayaGisisYap: false });
     this.setState({ odayaSevgilinBekleniyor: false });
@@ -193,31 +198,29 @@ class RoomLogin extends Component {
         this.setState({ gelenMesaj: mesaj });
       });
     }
+    //hekesin ilk olarak gördüğü ana pencere
 
+    //baya bi gelişme olacak
     let girisKontrol = (
       <div>
         <Box align="center" pad="large">
           <Box direction="row" align="center" gap="small" pad="xsmall">
             <Button
-              variant="contained"
-              color="primary"
+              color="#BF6900"
               onClick={this.odaOlusturucuMenusunuAc}
-            >
-              Ben Çalayım Sevgilim Dinlesin
-            </Button>
-            <br></br>
-
+              label="Ben Çalayım Sevgilim Dinlesin"
+            />
+            <br />
             <Button
-              variant="contained"
-              color="primary"
+              label="Sevdiğim Çalsın Ben Dinlerim"
+              color="#BF6900"
               onClick={this.odayaGirisYapmaMenusunuAc}
-            >
-              Sevdiğim Çalsın Ben Dinlerim
-            </Button>
+            />
           </Box>
         </Box>
       </div>
     );
+    //odayı oluşturmak üzere olanın gördüğü
     if (this.state.odaOlustur) {
       girisKontrol = (
         <form noValidate>
@@ -229,15 +232,14 @@ class RoomLogin extends Component {
           />
           <br />
           <Button
-            variant="contained"
-            color="primary"
+            label="Odayı Oluştur"
+            color="#BF6900"
             onClick={this.odayaGirisYapmaUygulamasınıCalıstır}
-          >
-            Odayı Oluştur
-          </Button>
+          />
         </form>
       );
     }
+    // odayı oluşturanın kavuşma olana kadar gördüğü
     if (this.state.odayaSevgilinBekleniyor) {
       girisKontrol = (
         <div>
@@ -255,25 +257,24 @@ class RoomLogin extends Component {
           </Paragraph>
           <Heading level={3}>Gönüllerin Efendisi Bekleniyor...</Heading>
           <Button
-            variant="contained"
-            color="primary"
+            icon={<Run />}
+            label="Gelmeden"
+            color="#BF6900"
             onClick={this.odayaSevgiliGirmedenCikma}
-          >
-            Çıkış yap
-          </Button>
+          />
         </div>
       );
     }
+    // Gelen Sevgili kodunun yazılacağı ekran
     if (this.state.odayaGisisYap) {
       girisKontrol = (
         <div>
           <Heading margin="small">
-            {" "}
             Sevdiğinden gelen sevgili kodunu girin
           </Heading>
           <form noValidate>
             <TextInput
-              placeholder={<span>Sevgili Kodu</span>}
+              placeholder="sevgilinin senin için belirlediği kod"
               value={this.state.segilidenGelenSevgiliKodu}
               onChange={event =>
                 this.setState({ segilidenGelenSevgiliKodu: event.target.value })
@@ -281,39 +282,44 @@ class RoomLogin extends Component {
             />
             <br />
             <Button
-              variant="contained"
-              color="primary"
+              icon={<Run />}
+              label="Çıkış yap"
+              color="#343330"
+              margin="medium"
               onClick={this.odayaSevgiliGirmedenCikma}
-            >
-              Çıkış yap
-            </Button>
+            />
             <Button
-              variant="contained"
-              color="primary"
+              icon={<Login />}
+              label="Giriş Yap"
+              color="#D72638"
+              margin="medium"
               onClick={this.sevgilidenKodGeldiOdayaGirisYap}
-            >
-              Giriş Yap
-            </Button>
+            />
           </form>
         </div>
       );
     }
 
-    if (this.props.yaratlanOdaAdi && this.props.kavusma) {
+    // kavuşmadan sonraki alan
+    if (this.props.kavusma) {
       girisKontrol = (
         <div>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={this.senkronizeEt}
-          >
-            Senkronize et
-          </Button>
+          {this.props.yaratlanOdaAdi ? (
+            <Button
+              icon={<Sync />}
+              label="Senkronize et"
+              color="#D72638"
+              onClick={this.senkronizeEt}
+            />
+          ) : (
+            ""
+          )}
+
           <br />
           {this.state.gelenMesaj}
           <br />
           <TextArea
-            placeholder="Mesaj Yaz"
+            placeholder="Örn: Sana olan aşkımı anlatan şarkı"
             value={this.state.yazdigimMesaj}
             onChange={event =>
               this.setState({ yazdigimMesaj: event.target.value })
@@ -325,28 +331,6 @@ class RoomLogin extends Component {
             label="Gönder"
             onClick={this.yazdiginMesajıGönder}
           />
-        </div>
-      );
-    }
-    if (this.props.girilenOdaAdi && this.props.yaratlanOdaAdi) {
-      girisKontrol = (
-        <div>
-          {this.state.gelenMesaj}
-          <br />
-          <TextArea
-            placeholder="Mesaj Yaz"
-            value={this.state.yazdigimMesaj}
-            onChange={event =>
-              this.setState({ yazdigimMesaj: event.target.value })
-            }
-          />
-          <br />
-          <Button
-            icon={<Send />}
-            label="Gönder"
-            onClick={this.yazdiginMesajıGönder}
-          />
-          <br />
         </div>
       );
     }
