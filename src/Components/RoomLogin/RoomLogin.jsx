@@ -73,6 +73,17 @@ class RoomLogin extends Component {
 
   componentDidMount() {
     this.socket = io.connect("https://spotilovebackend.herokuapp.com/");
+    this.socket.on("gelen Mesaj", dataMesaj => {
+      this.mesajGeldi(dataMesaj);
+    });
+    this.socket.on("gelenŞarkıBilgileriniÇal", data => {
+      console.log(data);
+      this.props.sarkiyiVeSuresiniAyarla(
+        data.dataSarkı.sarkiadi.track_window.current_track.uri,
+        data.dataSarkı.sarkiadi.track_window.current_track.album.uri,
+        data.dataSarkı.sarkizamani
+      );
+    });
   }
   //Mesajlaşma için Gerekli Fonksiyonlar
   yazdiginMesajıGönder = () => {
@@ -83,7 +94,7 @@ class RoomLogin extends Component {
   mesajGeldi = geldi => {
     console.log("gelen mesaj");
     console.log(geldi);
-    //this.setState({ gelenMesaj: geldi });
+    this.setState({ gelenMesaj: geldi.mesaj.name });
   };
 
   //Odalarla İlgili Fonsiyonlar
@@ -174,26 +185,6 @@ class RoomLogin extends Component {
       this.socket.on("3nolu bağlantı Sevdiğin Geldi", () => {
         console.log("oda adı girildi ve 3 numaralı bağlantı gerçekleşti");
         this.props.setKavusma(true);
-      });
-    }
-    // 5 Yönlendirme komutları buraya düşer
-    if (this.props.girilenOdaAdi) {
-      this.socket.on("gelenŞarkıBilgileriniÇal", data => {
-        console.log(data);
-        this.props.sarkiyiVeSuresiniAyarla(
-          data.dataSarkı.sarkiadi.track_window.current_track.uri,
-          data.dataSarkı.sarkiadi.track_window.current_track.album.uri,
-          data.dataSarkı.sarkizamani
-        );
-      });
-      this.socket.on("gelen Mesaj", dataMesaj => {
-        this.mesajGeldi(dataMesaj);
-      });
-    }
-
-    if (this.props.yaratlanOdaAdi) {
-      this.socket.on("gelen Mesaj", dataMesaj => {
-        this.mesajGeldi(dataMesaj);
       });
     }
     //hekesin ilk olarak gördüğü ana pencere
