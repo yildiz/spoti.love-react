@@ -81,8 +81,9 @@ class RoomLogin extends Component {
     });
   };
   mesajGeldi = geldi => {
+    console.log("gelen mesaj");
     console.log(geldi);
-    this.setState({ gelenMesaj: geldi });
+    //this.setState({ gelenMesaj: geldi });
   };
 
   //Odalarla İlgili Fonsiyonlar
@@ -101,11 +102,6 @@ class RoomLogin extends Component {
     this.setState({ girisYapilacakOdaAdi: "" });
   };
   sevgilidenKodGeldiOdayaGirisYap = () => {
-    alert(
-      "sevgilinin odasına bağlandın" +
-        this.state.segilidenGelenSevgiliKodu +
-        "odasına bağlandın"
-    );
     this.props.setGirilenOdaAdi(this.state.segilidenGelenSevgiliKodu);
   };
 
@@ -190,15 +186,14 @@ class RoomLogin extends Component {
           data.dataSarkı.sarkizamani
         );
       });
-      this.socket.on("gelen Mesaj", mesaj => {
-        this.state.mesajGeldi(mesaj);
+      this.socket.on("gelen Mesaj", dataMesaj => {
+        this.state.mesajGeldi(dataMesaj);
       });
     }
 
     if (this.props.yaratlanOdaAdi) {
-      this.socket.on("gelen Mesaj", mesaj => {
-        console.log(mesaj);
-        this.setState({ gelenMesaj: mesaj });
+      this.socket.on("gelen Mesaj", dataMesaj => {
+        this.state.mesajGeldi(dataMesaj);
       });
     }
     //hekesin ilk olarak gördüğü ana pencere
@@ -226,20 +221,26 @@ class RoomLogin extends Component {
     //odayı oluşturmak üzere olanın gördüğü
     if (this.state.odaOlustur) {
       girisKontrol = (
-        <form noValidate>
-          <TextInput
-            value={this.state.girisYapilacakOdaAdi}
-            onChange={event =>
-              this.setState({ girisYapilacakOdaAdi: event.target.value })
-            }
-          />
-          <br />
-          <Button
-            label="Odayı Oluştur"
-            color="#BF6900"
-            onClick={this.odayaGirisYapmaUygulamasınıCalıstır}
-          />
-        </form>
+        <div>
+          <Heading level={2}>
+            Oluşturulacak odanın adı sevgilin bu kod ile giriş yapacak
+          </Heading>
+          <form noValidate>
+            <TextInput
+              placeholder="Mecnun Leylaya abayı yaktı"
+              value={this.state.girisYapilacakOdaAdi}
+              onChange={event =>
+                this.setState({ girisYapilacakOdaAdi: event.target.value })
+              }
+            />
+            <br />
+            <Button
+              label="Odayı Oluştur"
+              color="#BF6900"
+              onClick={this.odayaGirisYapmaUygulamasınıCalıstır}
+            />
+          </form>
+        </div>
       );
     }
     // odayı oluşturanın kavuşma olana kadar gördüğü
@@ -272,9 +273,7 @@ class RoomLogin extends Component {
     if (this.state.odayaGisisYap) {
       girisKontrol = (
         <div>
-          <Heading margin="small">
-            Sevdiğinden gelen sevgili kodunu girin
-          </Heading>
+          <Heading level={2}>Sevdiğinden gelen sevgili kodunu girin:</Heading>
           <form noValidate>
             <TextInput
               placeholder="sevgilinin senin için belirlediği kod"
@@ -315,9 +314,8 @@ class RoomLogin extends Component {
               onClick={this.senkronizeEt}
             />
           ) : (
-            ""
+            <h5>sadece karşı taraf senkronize edebiliyor</h5>
           )}
-
           <br />
           <div>{this.state.gelenMesaj}</div>
           <br />
