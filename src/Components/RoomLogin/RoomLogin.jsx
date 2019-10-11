@@ -319,7 +319,7 @@ class RoomLogin extends Component {
           )}
 
           <br />
-          {this.state.gelenMesaj}
+          <div>{this.state.gelenMesaj}</div>
           <br />
           <TextArea
             placeholder="Örn: Sana olan aşkımı anlatan şarkı"
