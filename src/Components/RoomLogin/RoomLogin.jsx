@@ -187,13 +187,13 @@ class RoomLogin extends Component {
         );
       });
       this.socket.on("gelen Mesaj", dataMesaj => {
-        this.state.mesajGeldi(dataMesaj);
+        this.mesajGeldi(dataMesaj);
       });
     }
 
     if (this.props.yaratlanOdaAdi) {
       this.socket.on("gelen Mesaj", dataMesaj => {
-        this.state.mesajGeldi(dataMesaj);
+        this.mesajGeldi(dataMesaj);
       });
     }
     //hekesin ilk olarak gördüğü ana pencere
@@ -204,12 +204,14 @@ class RoomLogin extends Component {
         <Box align="center" pad="large">
           <Box direction="row" align="center" gap="small" pad="xsmall">
             <Button
+              primary
               color="#BF6900"
               onClick={this.odaOlusturucuMenusunuAc}
               label="Ben Çalayım Sevgilim Dinlesin"
             />
             <br />
             <Button
+              primary
               label="Sevdiğim Çalsın Ben Dinlerim"
               color="#BF6900"
               onClick={this.odayaGirisYapmaMenusunuAc}
@@ -235,6 +237,7 @@ class RoomLogin extends Component {
             />
             <br />
             <Button
+              primary
               label="Odayı Oluştur"
               color="#BF6900"
               onClick={this.odayaGirisYapmaUygulamasınıCalıstır}
@@ -261,6 +264,7 @@ class RoomLogin extends Component {
           </Paragraph>
           <Heading level={3}>Gönüllerin Efendisi Bekleniyor...</Heading>
           <Button
+            primary
             icon={<Run />}
             label="Gelmeden"
             color="#BF6900"
@@ -285,12 +289,14 @@ class RoomLogin extends Component {
             <br />
             <Button
               icon={<Run />}
+              primary
               label="Çıkış yap"
               color="#343330"
               margin="medium"
               onClick={this.odayaSevgiliGirmedenCikma}
             />
             <Button
+              primary
               icon={<Login />}
               label="Giriş Yap"
               color="#D72638"
@@ -308,6 +314,7 @@ class RoomLogin extends Component {
         <div>
           {this.props.yaratlanOdaAdi ? (
             <Button
+              primary
               icon={<Sync />}
               label="Senkronize et"
               color="#D72638"
@@ -328,6 +335,7 @@ class RoomLogin extends Component {
           />
           <br />
           <Button
+            primary
             icon={<Send />}
             label="Gönder"
             onClick={this.yazdiginMesajıGönder}
