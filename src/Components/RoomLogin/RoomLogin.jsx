@@ -86,8 +86,8 @@ class RoomLogin extends Component {
     });
   }
   componentWillUnmount() {
-    socket.off("gelen Mesaj");
-    socket.off("gelenŞarkıBilgileriniÇal");
+    this.socket.off("gelen Mesaj");
+    this.socket.off("gelenŞarkıBilgileriniÇal");
   }
   //Mesajlaşma için Gerekli Fonksiyonlar
   yazdiginMesajıGönder = () => {
