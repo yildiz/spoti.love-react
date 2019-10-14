@@ -15,7 +15,7 @@ import {
 import { grommet } from "grommet/themes";
 import { deepMerge } from "grommet/utils";
 import io from "socket.io-client";
-import Mylogo from "../../images/spotilove.svg";
+import { ReactComponent as Mylogo } from "../../images/spotilove.svg";
 const customTheme = deepMerge(grommet, {
   textInput: {
     extend: () => `
