@@ -79,12 +79,14 @@ class RoomLogin extends Component {
     this.socket.on("gelenŞarkıBilgileriniÇal", data => {
       console.log(data);
       this.props.sarkiyiVeSuresiniAyarla(
-        data.dataSarkı.sarkiadi.track_window.current_track.uri,
-        data.dataSarkı.sarkiadi.track_window.current_track.album.uri,
-        data.dataSarkı.sarkizamani
+        data.dataSarkı.sarkiadi.track_window.current_track.uri, //çalacağı şarkı
+        data.dataSarkı.sarkiadi.context.uri, //çalacağı playlist
+        data.dataSarkı.sarkizamani //zamanişte
       );
     });
   }
+
+  // Socket.on fonskiyonun art arda
   componentWillUnmount() {
     this.socket.off("gelen Mesaj");
     this.socket.off("gelenŞarkıBilgileriniÇal");
@@ -177,7 +179,7 @@ class RoomLogin extends Component {
       this.socket.on("3nolu bağlantı Sevdiğin Geldi", i => {
         console.log(i.kisisayisi);
         console.log("Sevgilin geldi seni dinlemeye hazır.");
-        this.props.setKavusma(true);
+        this.props.setKavusma(true); //ile bu if bloğundan çıktığı için CWU ya yazmaya gerek kalmadı
       });
     }
     // 2 odaya katıl seçeneğinden gelenler buraya düşecek
@@ -231,6 +233,13 @@ class RoomLogin extends Component {
               }
             />
             <br />
+            <Button
+              primary
+              icon={<Run />}
+              label="Yol yakınken"
+              color="#BF6900"
+              onClick={this.odayaSevgiliGirmedenCikma}
+            />
             <Button
               primary
               label="Odayı Oluştur"
