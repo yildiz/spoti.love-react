@@ -9,11 +9,13 @@ import {
   Paragraph,
   Box,
   TextArea,
-  Button
+  Button,
+  Text
 } from "grommet";
 import { grommet } from "grommet/themes";
 import { deepMerge } from "grommet/utils";
 import io from "socket.io-client";
+import Mylogo from "../../images/spotilove.svg";
 const customTheme = deepMerge(grommet, {
   textInput: {
     extend: () => `
@@ -351,11 +353,23 @@ class RoomLogin extends Component {
       <div>
         <Grommet full theme={customTheme}>
           <Box
-            border={{ color: "brand", size: "large" }}
-            pad="xlarge"
+            direction="row-responsive"
+            justify="center"
             align="center"
-            alignSelf="center"
+            pad="xlarge"
+            background="dark-2"
+            gap="medium"
           >
+            <Box
+              pad="large"
+              align="center"
+              background={{ color: "dark-2", opacity: "strong" }}
+              round
+              gap="small"
+            >
+              <Mylogo />
+              <Text>Spotilove</Text>
+            </Box>
             {girisKontrol}
           </Box>
         </Grommet>
