@@ -204,7 +204,8 @@ class RoomLogin extends Component {
           <Box direction="row" align="center" gap="small" pad="xsmall">
             <Button
               primary
-              color="#BF6900"
+              color="#B72A38"
+              color="#B72A38"
               onClick={this.odaOlusturucuMenusunuAc}
               label="Ben Çalayım Sevgilim Dinlesin"
             />
@@ -212,7 +213,7 @@ class RoomLogin extends Component {
             <Button
               primary
               label="Sevdiğim Çalsın Ben Dinlerim"
-              color="#BF6900"
+              color="#B72A38"
               onClick={this.odayaGirisYapmaMenusunuAc}
             />
           </Box>
@@ -245,7 +246,7 @@ class RoomLogin extends Component {
             <Button
               primary
               label="Odayı Oluştur"
-              color="#BF6900"
+              color="#B72A38"
               onClick={this.odayaGirisYapmaUygulamasınıCalıstır}
             />
           </form>
@@ -305,7 +306,7 @@ class RoomLogin extends Component {
               primary
               icon={<Login />}
               label="Giriş Yap"
-              color="#D72638"
+              color="#B72A38"
               margin="medium"
               onClick={this.sevgilidenKodGeldiOdayaGirisYap}
             />
@@ -323,7 +324,7 @@ class RoomLogin extends Component {
               primary
               icon={<Sync />}
               label="Senkronize et"
-              color="#D72638"
+              color="#B72A38"
               onClick={this.senkronizeEt}
             />
           ) : (
@@ -353,12 +354,13 @@ class RoomLogin extends Component {
       <div>
         <Grommet full theme={customTheme}>
           <Box
-            direction="row-responsive"
+            direction="column"
             justify="center"
             align="center"
             pad="xlarge"
-            background="dark-2"
-            gap="medium"
+            background="dark-1"
+            gap="xlarge"
+            height="xlarge"
           >
             <Box
               pad="large"
