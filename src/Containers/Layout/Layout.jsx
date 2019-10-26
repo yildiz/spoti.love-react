@@ -7,7 +7,6 @@ import * as actionTypes from "../../store/actions/actionTypes";
 import MusicPlayer from "../../Components/MusicPlayer/MusicPlayer";
 import Login from "../../Components/Login/Login";
 import { withWidth } from "@material-ui/core";
-import Girisekrani from "../../Components/GirisEkranı";
 
 class Layout extends Component {
   constructor(props) {
@@ -69,7 +68,7 @@ class Layout extends Component {
       } else {
         var scopes =
           "user-read-private user-read-email streaming user-modify-playback-state";
-        window.location = `https://accounts.spotify.com/authorize?client_id=${"dcffa764dc1542f0bd6296e4abe052b9"}&redirect_uri=${"https://spotilove.herokuapp.com/"}&scope=${encodeURIComponent(
+        window.location = `https://accounts.spotify.com/authorize?client_id=${"dcffa764dc1542f0bd6296e4abe052b9"}&redirect_uri=${"https://spotilove.herokuapp.com/app"}&scope=${encodeURIComponent(
           scopes
         )}&response_type=token`;
         /*
@@ -112,17 +111,6 @@ class Layout extends Component {
 */
   render() {
     const isLoggedIn = this.state.isLoggedIn;
-    /*
-    let drawer =
-      this.props.width === 'lg' || this.props.width === 'xl' ? (
-        <Sidedrawer />
-      ) : (
-        <Sidedrawer
-          open={this.state.sideDrawerOpen}
-          toggleDrawer={this.toggleDrawerHandler}
-        />
-      );
-    */
 
     let girisyapici = (
       <Switch>
@@ -138,10 +126,10 @@ class Layout extends Component {
               <MusicPlayer />
             </SpotifyApiContext.Provider>
           </React.Fragment>
-        ) : isLoggedIn || this.props.user ? (
-          girisyapici
         ) : (
-          <Girisekrani onClick={this.handleLoginClick} />
+          <Switch>
+            <Route component={Login} />
+          </Switch>
         )}
         ;
       </div>

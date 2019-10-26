@@ -205,7 +205,6 @@ class RoomLogin extends Component {
             <Button
               primary
               color="#B72A38"
-              color="#B72A38"
               onClick={this.odaOlusturucuMenusunuAc}
               label="Ben Çalayım Sevgilim Dinlesin"
             />
@@ -237,10 +236,11 @@ class RoomLogin extends Component {
             />
             <br />
             <Button
-              primary
               icon={<Run />}
-              label="Yol yakınken"
-              color="#BF6900"
+              primary
+              label="Çıkış yap"
+              color="#343330"
+              margin="medium"
               onClick={this.odayaSevgiliGirmedenCikma}
             />
             <Button
