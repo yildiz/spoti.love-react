@@ -360,7 +360,6 @@ class RoomLogin extends Component {
             pad="xlarge"
             background="dark-1"
             gap="xlarge"
-            height="xlarge"
           >
             <Box
               pad="large"
