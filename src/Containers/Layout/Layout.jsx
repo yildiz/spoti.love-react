@@ -11,17 +11,12 @@ import { withWidth } from "@material-ui/core";
 class Layout extends Component {
   constructor(props) {
     super(props);
-    this.handleLoginClick = this.handleLoginClick.bind(this);
+
     this.state = {
-      isLoggedIn: false,
       sideDrawerOpen: false,
       isOnMobile: false
     };
   }
-  handleLoginClick() {
-    this.setState({ isLoggedIn: true });
-  }
-
   isOnMobile = () => {
     var check = false;
     (function(a) {
@@ -68,7 +63,7 @@ class Layout extends Component {
       } else {
         var scopes =
           "user-read-private user-read-email streaming user-modify-playback-state";
-        window.location = `https://accounts.spotify.com/authorize?client_id=${"dcffa764dc1542f0bd6296e4abe052b9"}&redirect_uri=${"https://spotilove.herokuapp.com/app"}&scope=${encodeURIComponent(
+        window.location = `https://accounts.spotify.com/authorize?client_id=${"dcffa764dc1542f0bd6296e4abe052b9"}&redirect_uri=${"http://localhost:3000/app/callback/"}&scope=${encodeURIComponent(
           scopes
         )}&response_type=token`;
         /*
@@ -110,14 +105,6 @@ class Layout extends Component {
   };
 */
   render() {
-    const isLoggedIn = this.state.isLoggedIn;
-
-    let girisyapici = (
-      <Switch>
-        <Route component={Login} />
-      </Switch>
-    );
-
     return (
       <div>
         {this.props.user ? (

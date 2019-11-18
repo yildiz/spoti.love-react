@@ -8,7 +8,11 @@ const Login = () => (
                 href="http://spotify-test-backend.herokuapp.com/login"
                 style={{ textDecoration: "none" }}
             > */}
-      {/* prod */}
+      {console.log(
+        "process eyv de neler oluyor" + process.env.REACT_APP_SPOTIFY_CLIENT_ID
+      )
+      /* prod */
+      }
       <a
         href={`https://accounts.spotify.com/authorize?client_id=${process.env.REACT_APP_SPOTIFY_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_SPOTIFY_REDIRECT_URI}&scope=${process.env.REACT_APP_SPOTIFY_SCOPE}&response_type=token`}
         style={{ textDecoration: "none" }}

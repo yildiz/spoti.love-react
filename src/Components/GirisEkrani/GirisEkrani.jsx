@@ -55,7 +55,7 @@ function Girisekrani(props) {
                 primary={true}
                 reverse={true}
                 type="button"
-                href="https://spotilove.herokuapp.com/app"
+                href="http://localhost:3000/app/"
               />
               <Heading
                 color="dark-2"

@@ -81,8 +81,7 @@ class RoomLogin extends Component {
     this.socket.on("gelenŞarkıBilgileriniÇal", data => {
       console.log(data);
       this.props.sarkiyiVeSuresiniAyarla(
-        data.dataSarkı.sarkiadi.track_window.current_track.uri, //çalacağı şarkı
-        data.dataSarkı.sarkiadi.context.uri, //çalacağı playlist
+        data.dataSarkı.sarkiadi, //çalacağı şarkı
         data.dataSarkı.sarkizamani //zamanişte
       );
     });
@@ -98,6 +97,7 @@ class RoomLogin extends Component {
     this.socket.emit("mesaj Geldi", {
       name: this.state.yazdigimMesaj
     });
+    this.setState({ yazdigimMesaj: "" });
   };
   mesajGeldi = geldi => {
     console.log("gelen mesaj");
@@ -198,6 +198,7 @@ class RoomLogin extends Component {
     //hekesin ilk olarak gördüğü ana pencere
 
     //baya bi gelişme olacak
+    //İll ekran
     let girisKontrol = (
       <div>
         <Box align="center" pad="large">

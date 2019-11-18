@@ -18,15 +18,13 @@ import Slider from "@material-ui/lab/Slider";
 import { TrackDetailsLink } from "../UI/TrackDetailsLink";
 import RoomLogin from "../RoomLogin/RoomLogin";
 
-
-
 class MusicPlayer extends Component {
   constructor(props) {
     super(props);
     this.surebul = this.surebul.bind(this);
     this.onSeekSliderChange = this.onSeekSliderChange.bind(this);
     this.sarkiyiVeSuresiniAyarla = this.sarkiyiVeSuresiniAyarla.bind(this);
-    
+
     this.state = {
       deviceId: null,
       playingInfo: null,
@@ -35,40 +33,57 @@ class MusicPlayer extends Component {
       volumeSliderValue: 50,
       positionStamp: "00:00",
       player_init_error: false,
-      position:null,
-      sarkiAdi:"",
-      sarkiSuresi:0
-
+      position: null,
+      sarkiAdi: "",
+      sarkiSuresi: 0
     };
 
     this.player = null;
     this.playerCheckInterval = null;
     this.positionCheckInterval = null;
-    
   }
 
   componentDidMount() {
     this.playerCheckInterval = setInterval(() => this.checkForPlayer(), 1000);
-   
   }
 
-
-  sarkiyiVeSuresiniAyarla = async(uri,context_uri,suresi)=>{
-    if((uri !== this.state.playingInfo.track_window.current_track.uri)&&(suresi !== this.state.positionSliderValue)){
-      //şarkı ve şarkı süresi aynı değil
-    this.props.playSong(
+  sarkiyiVeSuresiniAyarla = async (sarki, suresi) => {
+    //gelen şarkı bilgilerini kullan
+    if (
+      !this.props.currentlyPlaying ||
+      this.props.currentlyPlaying !== sarki.track_window.current_track.name
+    ) {
+      let { current_track } = sarki.track_window;
+      console.log(sarki);
+      this.props.setCurrentlyPlaying(current_track.name);
+      const calacakSarki = [current_track.uri];
+      const spotifyagideckdosya = this.props.playSong(
         JSON.stringify({
-          context_uri: context_uri,
-          offset: {
-            uri: uri
-          },
+          uris: calacakSarki
         })
-    );
-      setTimeout(()=>{
-      this.onSeekSliderChange("asd",suresi)
-      },2000) 
+      );
 
-    } 
+      this.props.playSong(spotifyagideckdosya);
+
+      //şarkıyı çal bakalım
+      /*axios({
+        method: "POST",
+        url: "https://api.spotify.com/v1/me/player/play",
+        headers: {
+          Authorization: `Bearer ${this.props.user.access_token}`
+        },
+        data: {
+          uris: current_track.uri
+        }
+      });*/
+    }
+
+    if (suresi !== this.state.positionSliderValue) {
+      //şa
+      setTimeout(() => {
+        this.onSeekSliderChange("asd", suresi);
+      }, 2000);
+    }
     /*
     if(uri !== this.state.playingInfo.track_window.current_track.uri){
     //şarkı 
@@ -82,15 +97,22 @@ class MusicPlayer extends Component {
           })
       );
             
-    }else*/ 
-    if((uri === this.state.playingInfo.track_window.current_track.uri)  &&(suresi !== this.state.positionSliderValue) )
-    //şarkı aynı süresi farklı 
-    this.onSeekSliderChange("asd",suresi)
+    }else*/
+    /*
+    if (
+      uri === this.state.playingInfo.track_window.current_track.uri &&
+      suresi !== this.state.positionSliderValue
+    )
+      //şarkı aynı süresi farklı
+      this.onSeekSliderChange("asd", suresi);
     else {
-    //herşeyiyle güzel maşallah
-    console.log("konsolda bu yazıyı gördüysen maşallah demek için ekrana tükürebilirsin")
+      //herşeyiyle güzel maşallah
+      console.log(
+        "konsolda bu yazıyı gördüysen maşallah demek için ekrana tükürebilirsin"
+      );
     }
-  }
+  */
+  };
 
   checkForPlayer = () => {
     const token = this.props.user.access_token;
@@ -106,7 +128,7 @@ class MusicPlayer extends Component {
     }
 
     if (this.player) {
-      this.createEventHandlers();   
+      this.createEventHandlers();
       this.player.connect();
     }
   };
@@ -142,6 +164,7 @@ class MusicPlayer extends Component {
         ) {
           let { current_track } = state.track_window;
           this.props.setCurrentlyPlaying(current_track.name);
+          console.log(state.track_window);
         }
       }
     });
@@ -187,13 +210,15 @@ class MusicPlayer extends Component {
     });
   };
 
-  surebul = () =>{
+  surebul = () => {
+    //let { duration, position } = state;
+    //.log("duration " + duration);
+    //console.log("position " + position);
     this.setState({
-      sarkiAdi : this.state.playingInfo,
-      sarkiSuresi : this.state.positionSliderValue      
+      sarkiAdi: this.state.playingInfo,
+      sarkiSuresi: this.state.positionSliderValue
     });
-  }
-
+  };
 
   transferPlaybackHere = () => {
     // ONLY FOR PREMIUM USERS - transfer the playback automatically to the web app.
@@ -233,7 +258,6 @@ class MusicPlayer extends Component {
     this.player.nextTrack();
   };
 
-
   onSeekSliderChange = (e, val) => {
     // duration = 100%
     // ? = val%
@@ -245,7 +269,6 @@ class MusicPlayer extends Component {
       console.log(`Seek song to ${seek} ms`);
     });
   };
-
 
   onVolumeSliderChange = (e, val) => {
     let volume = val / 100; // val is between 0-100 and the volume accepted needs to be between 0-1
@@ -260,8 +283,6 @@ class MusicPlayer extends Component {
   };
 
   render() {
-  
-    
     let mainContent = (
       <Card
         style={{
@@ -292,7 +313,6 @@ class MusicPlayer extends Component {
     }
 
     if (this.player && this.state.playingInfo) {
-      
       mainContent = (
         <Card style={{ position: "fixed", bottom: 0, width: "100%" }}>
           <Grid
@@ -421,9 +441,9 @@ class MusicPlayer extends Component {
     }
     return (
       <div>
-        <RoomLogin 
+        <RoomLogin
           value={this.state.sarkiSuresi}
-          song={this.state.sarkiAdi} 
+          song={this.state.sarkiAdi}
           //onChange={this.onSeekSliderChange}
           surebul={this.surebul}
           sarkiyiVeSuresiniAyarla={this.sarkiyiVeSuresiniAyarla}
@@ -443,8 +463,7 @@ const mapStateToProps = state => {
     pozition_stamp: state.pozition_stamp,
     durationStamps: state.durationStamps,
     yaratlanOdaAdi: state.yaratlanOdaAdi,
-    girilenOdaAdi: state.girilenOdaAdi,
-    
+    girilenOdaAdi: state.girilenOdaAdi
   };
 };
 
