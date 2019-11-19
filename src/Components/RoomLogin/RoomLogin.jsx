@@ -72,6 +72,7 @@ class RoomLogin extends Component {
       senkronizeEtmeKontrol: false
     };
     this.socket = null;
+    this.her5saniyede1 = null;
   }
 
   componentDidMount() {

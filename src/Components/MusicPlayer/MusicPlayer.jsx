@@ -70,12 +70,13 @@ class MusicPlayer extends Component {
       this.props.playSong(spotifyagideckdosya);
     }
 
-    //2. ihtimal gelen süre ile o anda çalan şarkının süresi arasında 1 saniyeden fazla fark var ise süreyi senkronzie et
+    //2. ihtimal gelen süre ile o anda çalan şarkının süresi arasında 5 saniyeden fazla fark var ise süreyi senkronzie et
+    // önceden 1 saniyeydi arada atlamalar olunca süreyi arttırdım
     if (
       this.state.playingInfo.track_window.current_track.name ===
         sarki.track_window.current_track.name &&
-      (suresi <= this.state.positionMsCinsinden + 1000 ||
-        suresi >= this.state.positionMsCinsinden - 1000)
+      (suresi <= this.state.positionMsCinsinden + 5000 ||
+        suresi >= this.state.positionMsCinsinden - 5000)
     ) {
       this.player.seek(suresi).then(() => {
         console.log(`Seek song to ${suresi} ms`);
