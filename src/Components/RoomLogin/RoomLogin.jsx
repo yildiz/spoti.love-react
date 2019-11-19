@@ -204,12 +204,20 @@ class RoomLogin extends Component {
     //her 5 saniyede 1  senkronize etmes fonsiyonu
 
     //senkronize etmeyi başlatma
-    if (this.state.senkronizeEtmeKontrol) {
+    if (
+      this.state.senkronizeEtmeKontrol &&
+      this.props.kavusma &&
+      this.props.yaratlanOdaAdi
+    ) {
       this.her5saniyede1();
       this.setState({ senkronizeBasladı: true });
     }
     //senkronize etmeyi kapat
-    if (!this.state.senkronizeEtmeKontrol) {
+    if (
+      !this.state.senkronizeEtmeKontrol &&
+      this.props.kavusma &&
+      this.props.yaratlanOdaAdi
+    ) {
       //ilk başta kapalıyken tekrar kapatmamaya çalışmasını önlemek için
       if (this.state.senkronizeBasladı) {
         clearInterval(this.her5saniyede1());
