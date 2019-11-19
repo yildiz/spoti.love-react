@@ -74,7 +74,6 @@ class RoomLogin extends Component {
       senkronizeBasladı: false
     };
     this.socket = null;
-    this.her5saniyede1 = null;
   }
 
   componentDidMount() {
@@ -89,7 +88,6 @@ class RoomLogin extends Component {
         data.dataSarkı.sarkizamani //zamanişte
       );
     });
-    this.her5saniyede1 = setInterval(() => this.senkronizeEt(), 5000);
   }
 
   // Socket.on fonskiyonun art arda
@@ -209,7 +207,7 @@ class RoomLogin extends Component {
       this.props.kavusma &&
       this.props.yaratlanOdaAdi
     ) {
-      this.her5saniyede1();
+      this.her5saniyede1 = setInterval(() => this.senkronizeEt(), 5000);
       this.setState({ senkronizeBasladı: true });
     }
     //senkronize etmeyi kapat
