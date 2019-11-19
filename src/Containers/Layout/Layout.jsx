@@ -63,7 +63,7 @@ class Layout extends Component {
       } else {
         var scopes =
           "user-read-private user-read-email streaming user-modify-playback-state";
-        window.location = `https://accounts.spotify.com/authorize?client_id=${"dcffa764dc1542f0bd6296e4abe052b9"}&redirect_uri=${"http://localhost:3000/app/callback/"}&scope=${encodeURIComponent(
+        window.location = `https://accounts.spotify.com/authorize?client_id=${"dcffa764dc1542f0bd6296e4abe052b9"}&redirect_uri=${"https://spotilove.herokuapp.com/app/callback/"}&scope=${encodeURIComponent(
           scopes
         )}&response_type=token`;
         /*
