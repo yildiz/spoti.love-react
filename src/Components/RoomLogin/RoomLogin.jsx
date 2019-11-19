@@ -150,7 +150,7 @@ class RoomLogin extends Component {
       this.verigönder(this.props.song)
         .then(data => {
           let sarkisuresi = this.props.value;
-          console.log("gönderilecek" + sarkisuresi);
+          console.log("gönderilecek sure" + sarkisuresi);
           const gonderilecekDosya = [data, sarkisuresi];
           return gonderilecekDosya;
         })

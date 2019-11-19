@@ -35,7 +35,8 @@ class MusicPlayer extends Component {
       player_init_error: false,
       position: null,
       sarkiAdi: "",
-      sarkiSuresi: 0
+      sarkiSuresi: 0,
+      positionMsCinsinden: 0
     };
 
     this.player = null;
@@ -59,7 +60,8 @@ class MusicPlayer extends Component {
       const calacakSarki = [current_track.uri];
       const spotifyagideckdosya = this.props.playSong(
         JSON.stringify({
-          uris: calacakSarki
+          uris: calacakSarki,
+          position_ms: suresi + 3000
         })
       );
 
@@ -77,13 +79,16 @@ class MusicPlayer extends Component {
         }
       });*/
     }
-
-    if (suresi !== this.state.positionSliderValue) {
+    /*
+    if (suresi !== this.state.positionMsCinsinden) {
       //şa
       setTimeout(() => {
-        this.onSeekSliderChange("asd", suresi);
+        this.player.seek(suresi).then(() => {
+          console.log(`Seek song to ${suresi} ms`);
+        });
       }, 2000);
     }
+    */
     /*
     if(uri !== this.state.playingInfo.track_window.current_track.uri){
     //şarkı 
@@ -203,6 +208,7 @@ class MusicPlayer extends Component {
         let durationStamp = this.milisToMinutesAndSeconds(state.duration);
 
         this.setState({ positionStamp, durationStamp });
+        this.setState({ positionMsCinsinden: state.position });
         //this.props.setPozitionStamp(state.position);
         //this.props.setDurationStamps(state.duration);
         //console.log(state.duration);
@@ -216,7 +222,7 @@ class MusicPlayer extends Component {
     //console.log("position " + position);
     this.setState({
       sarkiAdi: this.state.playingInfo,
-      sarkiSuresi: this.state.positionSliderValue
+      sarkiSuresi: this.state.positionMsCinsinden
     });
   };
 
