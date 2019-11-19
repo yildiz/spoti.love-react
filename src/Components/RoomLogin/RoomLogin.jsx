@@ -74,6 +74,7 @@ class RoomLogin extends Component {
       senkronizeBasladı: false
     };
     this.socket = null;
+    this.her5saniyede1 = null;
   }
 
   componentDidMount() {
@@ -88,6 +89,7 @@ class RoomLogin extends Component {
         data.dataSarkı.sarkizamani //zamanişte
       );
     });
+    this.her5saniyede1 = setInterval(() => this.senkronizeEt(), 5000);
   }
 
   // Socket.on fonskiyonun art arda
@@ -200,17 +202,18 @@ class RoomLogin extends Component {
       });
     }
     //her 5 saniyede 1  senkronize etmes fonsiyonu
-    const her5saniyede1 = setInterval(this.senkronizeEt(), 5000);
 
     //senkronize etmeyi başlatma
     if (this.state.senkronizeEtmeKontrol) {
-      her5saniyede1();
+      this.her5saniyede1();
       this.setState({ senkronizeBasladı: true });
     }
     //senkronize etmeyi kapat
     if (!this.state.senkronizeEtmeKontrol) {
       //ilk başta kapalıyken tekrar kapatmamaya çalışmasını önlemek için
-      if (this.state.senkronizeBasladı) clearInterval(her5saniyede1());
+      if (this.state.senkronizeBasladı) {
+        clearInterval(this.her5saniyede1());
+      }
     }
     //hekesin ilk olarak gördüğü ana pencere
     //baya bi gelişme olacak
