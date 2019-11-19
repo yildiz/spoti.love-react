@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actionTypes from "../../store/actions/actionTypes";
-import { Send, Sync, Login, Run } from "grommet-icons";
+import { Send, Login, Run } from "grommet-icons";
 import {
   Grommet,
   TextInput,
@@ -10,7 +10,8 @@ import {
   Box,
   TextArea,
   Button,
-  Text
+  Text,
+  CheckBox
 } from "grommet";
 import { grommet } from "grommet/themes";
 import { deepMerge } from "grommet/utils";
@@ -197,14 +198,13 @@ class RoomLogin extends Component {
         this.props.setKavusma(true);
       });
     }
-    //senkronize etme kapalı
-    if (senkronizeEtmeKontrol) {
-      const her5saniyede1 = setInterval(this.senkronizeEt(), 5000);
+    const her5saniyede1 = setInterval(this.senkronizeEt(), 5000);
+    if (this.state.senkronizeEtmeKontrol) {
       her5saniyede1();
     }
     //senkronize etme açık
-    if (!senkronizeEtmeKontrol) {
-      clearInterval(her5saniyede1);
+    if (!this.state.senkronizeEtmeKontrol) {
+      clearInterval(her5saniyede1());
     }
     //hekesin ilk olarak gördüğü ana pencere
 
@@ -333,7 +333,7 @@ class RoomLogin extends Component {
         <div>
           {this.props.yaratlanOdaAdi ? (
             <CheckBox
-              checked={senkronizeEtmeKontrol}
+              checked={this.state.senkronizeEtmeKontrol}
               label="Senkronize et"
               onChange={event =>
                 this.setState({ senkronizeEtmeKontrol: event.target.checked })
