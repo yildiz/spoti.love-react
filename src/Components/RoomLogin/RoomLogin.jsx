@@ -70,7 +70,8 @@ class RoomLogin extends Component {
       segilidenGelenSevgiliKodu: "",
       yazdigimMesaj: "",
       gelenMesaj: "",
-      senkronizeEtmeKontrol: false
+      senkronizeEtmeKontrol: false,
+      senkronizeBasladı: false
     };
     this.socket = null;
   }
@@ -198,18 +199,22 @@ class RoomLogin extends Component {
         this.props.setKavusma(true);
       });
     }
+    //her 5 saniyede 1  senkronize etmes fonsiyonu
     const her5saniyede1 = setInterval(this.senkronizeEt(), 5000);
+
+    //senkronize etmeyi başlatma
     if (this.state.senkronizeEtmeKontrol) {
       her5saniyede1();
+      this.setState({ senkronizeBasladı: true });
     }
-    //senkronize etme açık
+    //senkronize etmeyi kapat
     if (!this.state.senkronizeEtmeKontrol) {
-      clearInterval(her5saniyede1());
+      //ilk başta kapalıyken tekrar kapatmamaya çalışmasını önlemek için
+      if (this.state.senkronizeBasladı) clearInterval(her5saniyede1());
     }
     //hekesin ilk olarak gördüğü ana pencere
-
     //baya bi gelişme olacak
-    //İll ekran
+    //  /app te görülecek ekran
     let girisKontrol = (
       <div>
         <Box align="center" pad="large">

@@ -45,6 +45,17 @@ function Girisekrani(props) {
               elevation="xlarge"
               round="large"
             >
+              <Heading
+                color="dark-2"
+                level="3"
+                margin="xsmall"
+                size="medium"
+                textAlign="center"
+                truncate={false}
+              >
+                Sevgiliyle beraber aynı şarkıda hayeller kurmak için
+                geliştirildi
+              </Heading>
               <Button
                 label="Uygulamaya gir"
                 disabled={false}
@@ -57,16 +68,6 @@ function Girisekrani(props) {
                 type="button"
                 href="https://spotilove.herokuapp.com/app/"
               />
-              <Heading
-                color="dark-2"
-                level="3"
-                margin="xsmall"
-                size="medium"
-                textAlign="center"
-                truncate={false}
-              >
-                Sevgiyle beraber aynı şarkıda hayeller kurmak için geliştirildi
-              </Heading>
             </Box>
           </Box>
           <Box
