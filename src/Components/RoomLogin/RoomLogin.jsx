@@ -93,10 +93,6 @@ class RoomLogin extends Component {
   componentWillUnmount() {
     this.socket.off("gelen Mesaj");
     this.socket.off("gelenŞarkıBilgileriniÇal");
-    senkronizeyiDursur = () => {
-      clearInterval(this.her5saniyede1());
-      this.setState({ senkronizeEtmeKontrol: false });
-    };
   }
 
   //Mesajlaşma için Gerekli Fonksiyonlar
@@ -153,11 +149,6 @@ class RoomLogin extends Component {
   senkronizeyiBaslat = () => {
     this.her5saniyede1 = setInterval(() => this.senkronizeEt(), 5000);
     this.setState({ senkronizeEtmeKontrol: true });
-  };
-
-  senkronizeyiDursur = () => {
-    clearInterval(this.her5saniyede1());
-    this.setState({ senkronizeEtmeKontrol: false });
   };
 
   senkronizeEt = async () => {
@@ -345,13 +336,7 @@ class RoomLogin extends Component {
                 onClick={this.senkronizeyiBaslat}
               />
             ) : (
-              <Button
-                primary
-                icon={<Sync />}
-                label="Senkronizeyi Durdur"
-                color="#B72A38"
-                onClick={this.senkronizeyiDursur}
-              />
+              <H3> SENKRONİZE BAŞLADI </H3>
             )
           ) : (
             <h5>sadece karşı taraf senkronize edebiliyor</h5>
