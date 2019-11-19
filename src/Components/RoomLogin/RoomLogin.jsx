@@ -93,6 +93,10 @@ class RoomLogin extends Component {
   componentWillUnmount() {
     this.socket.off("gelen Mesaj");
     this.socket.off("gelenŞarkıBilgileriniÇal");
+    senkronizeyiDursur = () => {
+      clearInterval(this.her5saniyede1());
+      this.setState({ senkronizeEtmeKontrol: false });
+    };
   }
 
   //Mesajlaşma için Gerekli Fonksiyonlar

@@ -49,6 +49,15 @@ class MusicPlayer extends Component {
   }
 
   sarkiyiVeSuresiniAyarla = async (sarki, suresi) => {
+    console.log("gelen sure" + suresi);
+    console.log("sistemdeki sure" + this.state.positionMsCinsinden);
+    console.log(
+      "sistemdeki şarkı adı: " +
+        this.state.playingInfo.track_window.current_track.name
+    );
+    console.log(
+      "sistemdeki şarkı adı: " + sarki.track_window.current_track.name
+    );
     //gelen şarkı bilgilerini kullanarak düzeltmeleri yap
     //3 ihtimal vardır 1- Şarkı farklı. 2- Sadece süre farklı 3. Herşey yolunda
     //1. ihtimal şarkı farkı ise düzeltmeleri yap şarkı ve süre ayarı
@@ -78,6 +87,9 @@ class MusicPlayer extends Component {
       (suresi <= this.state.positionMsCinsinden + 5000 ||
         suresi >= this.state.positionMsCinsinden - 5000)
     ) {
+      // amına koyayım senin sen hele bi şu süreleri ver bakayım bana
+      console.log("gelen sure" + suresi);
+      console.log("sistemdeki sure" + this.state.positionMsCinsinden);
       this.player.seek(suresi).then(() => {
         console.log(`Seek song to ${suresi} ms`);
       });
