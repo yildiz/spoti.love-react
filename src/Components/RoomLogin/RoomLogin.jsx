@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actionTypes from "../../store/actions/actionTypes";
-import { Send, Login, Run } from "grommet-icons";
+import { Send, Login, Run, Sync } from "grommet-icons";
 import {
   Grommet,
   TextInput,
@@ -10,8 +10,7 @@ import {
   Box,
   TextArea,
   Button,
-  Text,
-  CheckBox
+  Text
 } from "grommet";
 import { grommet } from "grommet/themes";
 import { deepMerge } from "grommet/utils";
@@ -70,8 +69,7 @@ class RoomLogin extends Component {
       segilidenGelenSevgiliKodu: "",
       yazdigimMesaj: "",
       gelenMesaj: "",
-      senkronizeEtmeKontrol: false,
-      senkronizeBasladı: false
+      senkronizeEtmeKontrol: false
     };
     this.socket = null;
   }
@@ -147,6 +145,15 @@ class RoomLogin extends Component {
       }
     });
   };
+  senkronizeyiBaslat = () => {
+    this.her5saniyede1 = setInterval(() => this.senkronizeEt(), 5000);
+    this.setState({ senkronizeEtmeKontrol: true });
+  };
+
+  senkronizeyiDursur = () => {
+    clearInterval(this.her5saniyede1());
+    this.setState({ senkronizeEtmeKontrol: false });
+  };
 
   senkronizeEt = async () => {
     await this.props.surebul();
@@ -198,28 +205,6 @@ class RoomLogin extends Component {
         console.log("oda adı girildi ve 3 numaralı bağlantı gerçekleşti");
         this.props.setKavusma(true);
       });
-    }
-    //her 5 saniyede 1  senkronize etmes fonsiyonu
-
-    //senkronize etmeyi başlatma
-    if (
-      this.state.senkronizeEtmeKontrol &&
-      this.props.kavusma &&
-      this.props.yaratlanOdaAdi
-    ) {
-      this.her5saniyede1 = setInterval(() => this.senkronizeEt(), 5000);
-      this.setState({ senkronizeBasladı: true });
-    }
-    //senkronize etmeyi kapat
-    if (
-      !this.state.senkronizeEtmeKontrol &&
-      this.props.kavusma &&
-      this.props.yaratlanOdaAdi
-    ) {
-      //ilk başta kapalıyken tekrar kapatmamaya çalışmasını önlemek için
-      if (this.state.senkronizeBasladı) {
-        clearInterval(this.her5saniyede1());
-      }
     }
     //hekesin ilk olarak gördüğü ana pencere
     //baya bi gelişme olacak
@@ -346,13 +331,23 @@ class RoomLogin extends Component {
       girisKontrol = (
         <div>
           {this.props.yaratlanOdaAdi ? (
-            <CheckBox
-              checked={this.state.senkronizeEtmeKontrol}
-              label="Senkronize et"
-              onChange={event =>
-                this.setState({ senkronizeEtmeKontrol: event.target.checked })
-              }
-            />
+            !this.state.senkronizeEtmeKontrol ? (
+              <Button
+                primary
+                icon={<Sync />}
+                label="Senkronizeyi Başlat"
+                color="#B72A38"
+                onClick={this.senkronizeyiBaslat}
+              />
+            ) : (
+              <Button
+                primary
+                icon={<Sync />}
+                label="Senkronizeyi Durdur"
+                color="#B72A38"
+                onClick={this.senkronizeyiDursur}
+              />
+            )
           ) : (
             <h5>sadece karşı taraf senkronize edebiliyor</h5>
           )}
