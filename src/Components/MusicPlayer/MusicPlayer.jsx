@@ -49,10 +49,12 @@ class MusicPlayer extends Component {
   }
 
   sarkiyiVeSuresiniAyarla = async (sarki, suresi) => {
-    //gelen şarkı bilgilerini kullan
+    //gelen şarkı bilgilerini kullanarak düzeltmeleri yap
+    //3 ihtimal vardır 1- Şarkı farklı. 2- Sadece süre farklı 3. Herşey yolunda
+    //1. ihtimal şarkı farkı ise düzeltmeleri yap şarkı ve süre ayarı
     if (
-      !this.props.currentlyPlaying ||
-      this.props.currentlyPlaying !== sarki.track_window.current_track.name
+      this.state.playingInfo.track_window.current_track.name !==
+      sarki.track_window.current_track.name
     ) {
       let { current_track } = sarki.track_window;
       console.log(sarki);
@@ -61,34 +63,25 @@ class MusicPlayer extends Component {
       const spotifyagideckdosya = this.props.playSong(
         JSON.stringify({
           uris: calacakSarki,
-          position_ms: suresi + 3000
+          position_ms: suresi + 3000 //RoomLoginden gelmeden önce 3 saniye beklettim onu ilave ediyorum
         })
       );
 
       this.props.playSong(spotifyagideckdosya);
+    }
 
-      //şarkıyı çal bakalım
-      /*axios({
-        method: "POST",
-        url: "https://api.spotify.com/v1/me/player/play",
-        headers: {
-          Authorization: `Bearer ${this.props.user.access_token}`
-        },
-        data: {
-          uris: current_track.uri
-        }
-      });*/
+    //2. ihtimal gelen süre ile o anda çalan şarkının süresi arasında 1 saniyeden fazla fark var ise süreyi senkronzie et
+    if (
+      this.state.playingInfo.track_window.current_track.name ===
+        sarki.track_window.current_track.name &&
+      (suresi <= this.state.positionMsCinsinden + 1000 ||
+        suresi >= this.state.positionMsCinsinden - 1000)
+    ) {
+      this.player.seek(suresi).then(() => {
+        console.log(`Seek song to ${suresi} ms`);
+      });
     }
-    /*
-    if (suresi !== this.state.positionMsCinsinden) {
-      //şa
-      setTimeout(() => {
-        this.player.seek(suresi).then(() => {
-          console.log(`Seek song to ${suresi} ms`);
-        });
-      }, 2000);
-    }
-    */
+
     /*
     if(uri !== this.state.playingInfo.track_window.current_track.uri){
     //şarkı 

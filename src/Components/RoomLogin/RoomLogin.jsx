@@ -68,7 +68,8 @@ class RoomLogin extends Component {
       girisYapilacakOdaAdi: "",
       segilidenGelenSevgiliKodu: "",
       yazdigimMesaj: "",
-      gelenMesaj: ""
+      gelenMesaj: "",
+      senkronizeEtmeKontrol: false
     };
     this.socket = null;
   }
@@ -92,6 +93,7 @@ class RoomLogin extends Component {
     this.socket.off("gelen Mesaj");
     this.socket.off("gelenŞarkıBilgileriniÇal");
   }
+
   //Mesajlaşma için Gerekli Fonksiyonlar
   yazdiginMesajıGönder = () => {
     this.socket.emit("mesaj Geldi", {
@@ -195,6 +197,15 @@ class RoomLogin extends Component {
         this.props.setKavusma(true);
       });
     }
+    //senkronize etme kapalı
+    if (senkronizeEtmeKontrol) {
+      const her5saniyede1 = setInterval(this.senkronizeEt(), 5000);
+      her5saniyede1();
+    }
+    //senkronize etme açık
+    if (!senkronizeEtmeKontrol) {
+      clearInterval(her5saniyede1);
+    }
     //hekesin ilk olarak gördüğü ana pencere
 
     //baya bi gelişme olacak
@@ -264,9 +275,9 @@ class RoomLogin extends Component {
             Sevdiğin insanla kalbinin aynı ritimde atması için sevdiğinin
             izlemesi gereken birkaç basit adım
             <br />
-            1 : spoti.love sitesine giriş yapmak
+            1 : https://spotilove.herokuapp.com sitesine giriş yapmak
             <br />
-            2 : Spotify Preminum hesabı ile giriş yapmak
+            2 : Spotify Preminum hesabı ile sönlendirmeleri takip etmek
             <br />3 : odada katıl butonuna basıp oda adına belirlediğin sevgili
             kodunu girmesi
           </Paragraph>
@@ -321,12 +332,12 @@ class RoomLogin extends Component {
       girisKontrol = (
         <div>
           {this.props.yaratlanOdaAdi ? (
-            <Button
-              primary
-              icon={<Sync />}
+            <CheckBox
+              checked={senkronizeEtmeKontrol}
               label="Senkronize et"
-              color="#B72A38"
-              onClick={this.senkronizeEt}
+              onChange={event =>
+                this.setState({ senkronizeEtmeKontrol: event.target.checked })
+              }
             />
           ) : (
             <h5>sadece karşı taraf senkronize edebiliyor</h5>
