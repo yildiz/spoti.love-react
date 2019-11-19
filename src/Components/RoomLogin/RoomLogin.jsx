@@ -336,7 +336,7 @@ class RoomLogin extends Component {
                 onClick={this.senkronizeyiBaslat}
               />
             ) : (
-              <H3> SENKRONİZE BAŞLADI </H3>
+              <Heading margin="none">YAYINDASIN</Heading>
             )
           ) : (
             <h5>sadece karşı taraf senkronize edebiliyor</h5>
