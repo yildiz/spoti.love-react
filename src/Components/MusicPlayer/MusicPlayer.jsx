@@ -84,14 +84,14 @@ class MusicPlayer extends Component {
     if (
       this.state.playingInfo.track_window.current_track.name ===
         sarki.track_window.current_track.name &&
-      (suresi <= this.state.positionMsCinsinden + 5000 ||
-        suresi >= this.state.positionMsCinsinden - 5000)
+      (suresi + 3000 <= this.state.positionMsCinsinden + 5000 ||
+        suresi + 3000 >= this.state.positionMsCinsinden - 5000)
     ) {
       // amına koyayım senin sen hele bi şu süreleri ver bakayım bana
-      console.log("gelen sure" + suresi);
+      console.log("gelen sure" + suresi + 3000);
       console.log("sistemdeki sure" + this.state.positionMsCinsinden);
-      this.player.seek(suresi).then(() => {
-        console.log(`Seek song to ${suresi} ms`);
+      this.player.seek(suresi + 3000).then(() => {
+        console.log(`Seek song to ${suresi + 3000} ms`);
       });
     }
 
@@ -229,7 +229,7 @@ class MusicPlayer extends Component {
     this.player.on("player_state_changed", durum => {
       console.log(durum);
       this.setState({
-        sarkiAdi: this.durum.playingInfo,
+        sarkiAdi: this.durum,
         sarkiSuresi: this.durum.position
       });
     });
