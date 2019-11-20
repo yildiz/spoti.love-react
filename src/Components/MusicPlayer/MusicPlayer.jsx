@@ -227,12 +227,12 @@ class MusicPlayer extends Component {
     //.log("duration " + duration);
     //console.log("position " + position);
     this.player.on("player_state_changed", durum => {
-      console.log(durum)
+      console.log(durum);
       this.setState({
-      sarkiAdi: this.durum.playingInfo,
-      sarkiSuresi: this.durum.position
+        sarkiAdi: this.durum.playingInfo,
+        sarkiSuresi: this.durum.position
+      });
     });
-  }
   };
 
   transferPlaybackHere = () => {
