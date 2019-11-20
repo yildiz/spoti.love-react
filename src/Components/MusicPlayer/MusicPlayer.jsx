@@ -49,7 +49,7 @@ class MusicPlayer extends Component {
   }
 
   sarkiyiVeSuresiniAyarla = async (sarki, suresi) => {
-    sure = suresi + 3000;
+    const sure = suresi + 3000;
     console.log("gelen sure" + sure);
     console.log("sistemdeki sure" + this.state.positionMsCinsinden);
     console.log(
