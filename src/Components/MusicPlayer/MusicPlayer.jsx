@@ -85,8 +85,8 @@ class MusicPlayer extends Component {
     if (
       this.state.playingInfo.track_window.current_track.name ===
         sarki.track_window.current_track.name &&
-      (sure <= this.state.positionMsCinsinden + 5000 ||
-        sure >= this.state.positionMsCinsinden - 5000)
+      (sure <= this.state.positionMsCinsinden - 5000 ||
+        sure >= this.state.positionMsCinsinden + 5000)
     ) {
       // amına koyayım senin sen hele bi şu süreleri ver bakayım bana
       console.log("gelen sure" + sure);
