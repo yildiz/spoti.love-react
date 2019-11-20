@@ -49,7 +49,8 @@ class MusicPlayer extends Component {
   }
 
   sarkiyiVeSuresiniAyarla = async (sarki, suresi) => {
-    console.log("gelen sure" + suresi);
+    sure = suresi + 3000;
+    console.log("gelen sure" + sure);
     console.log("sistemdeki sure" + this.state.positionMsCinsinden);
     console.log(
       "sistemdeki şarkı adı: " +
@@ -72,7 +73,7 @@ class MusicPlayer extends Component {
       const spotifyagideckdosya = this.props.playSong(
         JSON.stringify({
           uris: calacakSarki,
-          position_ms: suresi + 3000 //RoomLoginden gelmeden önce 3 saniye beklettim onu ilave ediyorum
+          position_ms: sure + 3000 //RoomLoginden gelmeden önce 3 saniye beklettim onu ilave ediyorum
         })
       );
 
@@ -84,14 +85,14 @@ class MusicPlayer extends Component {
     if (
       this.state.playingInfo.track_window.current_track.name ===
         sarki.track_window.current_track.name &&
-      (suresi + 3000 <= this.state.positionMsCinsinden + 5000 ||
-        suresi + 3000 >= this.state.positionMsCinsinden - 5000)
+      (sure <= this.state.positionMsCinsinden + 5000 ||
+        sure >= this.state.positionMsCinsinden - 5000)
     ) {
       // amına koyayım senin sen hele bi şu süreleri ver bakayım bana
-      console.log("gelen sure" + suresi + 3000);
+      console.log("gelen sure" + sure);
       console.log("sistemdeki sure" + this.state.positionMsCinsinden);
-      this.player.seek(suresi + 3000).then(() => {
-        console.log(`Seek song to ${suresi + 3000} ms`);
+      this.player.seek(sure).then(() => {
+        console.log(`Seek song to ${sure} ms`);
       });
     }
 
@@ -215,23 +216,18 @@ class MusicPlayer extends Component {
 
         this.setState({ positionStamp, durationStamp });
         this.setState({ positionMsCinsinden: state.position });
-        //this.props.setPozitionStamp(state.position);
-        //this.props.setDurationStamps(state.duration);
-        //console.log(state.duration);
       }
     });
   };
 
   surebul = () => {
-    //let { duration, position } = state;
-    //.log("duration " + duration);
-    //console.log("position " + position);
-    this.player.on("player_state_changed", durum => {
-      console.log(durum);
-      this.setState({
-        sarkiAdi: this.durum,
-        sarkiSuresi: this.durum.position
-      });
+    this.setState({
+      sarkiAdi: this.state.playingInfo,
+      sarkiSuresi: this.state.positionMsCinsinden
+    });
+
+    this.player.getCurrentState().then(gerekşibilgiler => {
+      console.log("gerekli bilgiler" + gerekşibilgiler);
     });
   };
 
