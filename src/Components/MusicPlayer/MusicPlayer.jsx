@@ -49,7 +49,7 @@ class MusicPlayer extends Component {
   }
 
   sarkiyiVeSuresiniAyarla = async (sarki, suresi) => {
-    const sure = suresi + 3000;
+    const sure = suresi - 3000;
     console.log("gelen sure" + sure);
     console.log("sistemdeki sure" + this.state.positionMsCinsinden);
     console.log(
@@ -73,7 +73,7 @@ class MusicPlayer extends Component {
       const spotifyagideckdosya = this.props.playSong(
         JSON.stringify({
           uris: calacakSarki,
-          position_ms: sure + 3000 //RoomLoginden gelmeden önce 3 saniye beklettim onu ilave ediyorum
+          position_ms: sure //RoomLoginden gelmeden önce 3 saniye beklettim onu ilave ediyorum
         })
       );
 
@@ -95,35 +95,6 @@ class MusicPlayer extends Component {
         console.log(`Seek song to ${sure} ms`);
       });
     }
-
-    /*
-    if(uri !== this.state.playingInfo.track_window.current_track.uri){
-    //şarkı 
-      console.log("şarkı değiştiriliyor")
-       this.props.playSong(
-          JSON.stringify({
-            context_uri: context_uri,
-            offset: {
-              uri: uri
-            },
-          })
-      );
-            
-    }else*/
-    /*
-    if (
-      uri === this.state.playingInfo.track_window.current_track.uri &&
-      suresi !== this.state.positionSliderValue
-    )
-      //şarkı aynı süresi farklı
-      this.onSeekSliderChange("asd", suresi);
-    else {
-      //herşeyiyle güzel maşallah
-      console.log(
-        "konsolda bu yazıyı gördüysen maşallah demek için ekrana tükürebilirsin"
-      );
-    }
-  */
   };
 
   checkForPlayer = () => {
@@ -227,7 +198,12 @@ class MusicPlayer extends Component {
     });
 
     this.player.getCurrentState().then(gerekşibilgiler => {
-      console.log("gerekli bilgiler" + gerekşibilgiler);
+      console.log("getCurrent");
+      console.log(gerekşibilgiler);
+    });
+    this.player.on("player_state_changed", bilgi => {
+      console.log("player_state");
+      console.log(bilgi);
     });
   };
 
