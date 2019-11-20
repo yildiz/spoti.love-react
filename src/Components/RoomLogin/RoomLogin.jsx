@@ -80,7 +80,6 @@ class RoomLogin extends Component {
       this.mesajGeldi(dataMesaj);
     });
     this.socket.on("gelenŞarkıBilgileriniÇal", data => {
-      console.log(data);
       this.props.sarkiyiVeSuresiniAyarla(
         data.dataSarkı.sarkiadi, //çalacağı şarkı
         data.dataSarkı.sarkizamani //zamanişte
@@ -102,8 +101,6 @@ class RoomLogin extends Component {
     this.setState({ yazdigimMesaj: "" });
   };
   mesajGeldi = geldi => {
-    console.log("gelen mesaj");
-    console.log(geldi);
     this.setState({ gelenMesaj: geldi.mesaj.name });
   };
 
@@ -156,7 +153,6 @@ class RoomLogin extends Component {
       this.verigönder(this.props.song)
         .then(data => {
           let sarkisuresi = this.props.value;
-          console.log("gönderilecek sure" + sarkisuresi);
           const gonderilecekDosya = [data, sarkisuresi];
           return gonderilecekDosya;
         })
@@ -185,7 +181,6 @@ class RoomLogin extends Component {
       // 3 kavuşma sonrası beklenen an geldiğinde
 
       this.socket.on("3nolu bağlantı Sevdiğin Geldi", i => {
-        console.log(i.kisisayisi);
         console.log("Sevgilin geldi seni dinlemeye hazır.");
         this.props.setKavusma(true); //ile bu if bloğundan çıktığı için CWU ya yazmaya gerek kalmadı
       });
