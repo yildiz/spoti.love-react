@@ -226,10 +226,13 @@ class MusicPlayer extends Component {
     //let { duration, position } = state;
     //.log("duration " + duration);
     //console.log("position " + position);
-    this.setState({
-      sarkiAdi: this.state.playingInfo,
-      sarkiSuresi: this.state.positionMsCinsinden
+    this.player.on("player_state_changed", durum => {
+      console.log(durum)
+      this.setState({
+      sarkiAdi: this.durum.playingInfo,
+      sarkiSuresi: this.durum.position
     });
+  }
   };
 
   transferPlaybackHere = () => {
