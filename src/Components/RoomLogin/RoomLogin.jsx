@@ -147,9 +147,9 @@ class RoomLogin extends Component {
     this.setState({ senkronizeEtmeKontrol: true });
   };
 
-  senkronizeEt = async () => {
-    await this.props.surebul();
-    setTimeout(
+  senkronizeEt = () => {
+    this.props.surebul();
+    setTimeout(() => {
       this.verigönder(this.props.song)
         .then(data => {
           let sarkisuresi = this.props.value;
@@ -165,9 +165,8 @@ class RoomLogin extends Component {
         })
         .catch(() => {
           console.log("veriler bi şekilde gitmedi bi araştır onu ");
-        }),
-      3000
-    );
+        });
+    }, 3000);
   };
 
   render() {

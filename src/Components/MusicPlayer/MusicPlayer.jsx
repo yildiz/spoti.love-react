@@ -49,7 +49,7 @@ class MusicPlayer extends Component {
   }
 
   sarkiyiVeSuresiniAyarla = async (sarki, suresi) => {
-    const sure = suresi - 3000;
+    const sure = suresi + 3000;
 
     //gelen şarkı bilgilerini kullanarak düzeltmeleri yap
     //3 ihtimal vardır 1- Şarkı farklı. 2- Sadece süre farklı 3. Herşey yolunda
@@ -183,7 +183,7 @@ class MusicPlayer extends Component {
     this.player.getCurrentState().then(gereklibilgiler => {
       this.setState({
         sarkiAdi: gereklibilgiler,
-        sarkiSuresi: gereklibilgiler.position
+        sarkiSuresi: this.state.positionMsCinsinden
       });
     });
   };
